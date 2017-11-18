@@ -1,0 +1,115 @@
+.menuBar{
+  /* background-color: #DDDDDD; */
+  display: -webkit-flex;
+  display: flex;
+  /* position: fixed; */
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+
+.label{
+  border-radius: 4px;
+}
+
+#enableTextArea {
+  display: block;
+  padding: 19.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  width: 100%;
+  height: 292px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.edit-button {
+  background-color: lightgray;
+  font-size: 12px;
+  cursor: pointer;
+  height: 30px;
+}
+
+.save-button {
+  background-color: lightgray;
+  font-size: 12px;
+  cursor: pointer;
+  height: 30px;
+}
+
+.cancel-button {
+  background-color: lightgray;
+  font-size: 12px;
+  cursor: pointer;
+  height: 30px;
+}
+
+#id_confrmdiv {
+  background-color: #eee;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  position: absolute;
+  margin-top: -331px;
+  width: 345px;
+  padding: 6px 8px 8px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+textarea:hover {
+  background-color: lightyellow;
+}
+
+button:hover {
+  background-color: gray;
+}
+
+.pagination {
+  display: flex;
+  background-color: #f5f5f5;
+  align-self: center;
+  margin: 1% 1% 1% 1%;
+  list-style: none;
+  border-radius: .25rem;
+  width: 98%;
+}
+
+li {
+  /* display: inline-block; */
+  padding-left: 0%;
+  padding-right: 0%;
+  margin: 1% 1% 1% 1%;
+  border-radius: .15rem;
+  cursor: pointer;
+}
+
+.bucketSelectList {
+  margin: 6px;
+  height: 40px;
+  font: inherit;
+  color: inherit;
+}
+
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,18 @@
+version: '3.2'
+
+services:
+  database:
+    build: docker-database
+    ports:
+      - "8091-8094:8091-8094"
+      - "11207-11210:11207-11210"
+      - "18091-18094:18091-18094"
+  sync-gateway:
+    build: docker-sync-gateway
+    ports:
+      - "4984:4984"
+      - "4985:4985"
+    restart: on-failure
+    depends_on:
+      - "database"
+

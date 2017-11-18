@@ -1,0 +1,29 @@
+{
+  "log": ["HTTP", "HTTP+", "CRUD"],
+  "adminInterface": "sync-gateway:4985",
+  "CORS": {
+    "Origin":["*"],
+    "LoginOrigin":["*"],
+    "Headers":["Content-Type"],
+    "MaxAge": 1728000
+  },
+  "databases": {
+    "beer-sample": {
+      "import_docs": "continuous",
+      "unsupported": {
+        "replicator_2": true
+      },
+      "bucket": "beer-sample",
+      "username": "Administrator",
+      "password": "password",
+      "server": "http://database:8091",
+      "users": {
+        "GUEST": {
+          "disabled": false,
+          "all_channels": ["*"],
+          "admin_channels": ["*"]
+        }
+      }
+    }
+  }
+}
