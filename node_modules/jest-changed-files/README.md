@@ -11,50 +11,38 @@ $ npm install --save jest-changed-files
 
 ## API
 
-### `getChangedFilesForRoots(roots: <Array<string>>, options: ?object): Promise<?object>`
+### `hg.isHGRepository(cwd: string): Promise<?string>`
 
-Get the list of files and repos that have changed since the last commit.
+Get the root of the mercurial repository containing `cwd` or return `null` if
+`cwd` is not inside a mercurial repository.
 
-#### Parameters
-roots: Array of string paths gathered from [jest roots](https://facebook.github.io/jest/docs/configuration.html#roots-array-string).
+### `git.isGitRepository(cwd: string): Promise<?string>`
 
-options: Object literal with keys
-* lastCommit: boolean
-* withAncestor: boolean
+Get the root of the git repository containing `cwd` or return `null` if
+`cwd` is not inside a git repository.
 
-### findRepos(roots: <Array<string>>): Promise<?object>
+### `hg.findChangedFiles / git.findChangedFiles (root: string): Promise<Array<string>>`
 
-Get a set of git and hg repositories.
-#### Parameters
-roots: Array of string paths gathered from [jest roots](https://facebook.github.io/jest/docs/configuration.html#roots-array-string).
+Get the list of files in a git/mecurial repository that have changed since the
+last commit.
 
 ## Usage
 
 ```javascript
-import {getChangedFilesForRoots} from 'jest-changed-files';
+import {git, hg} from 'jest-changed-files';
 
-getChangedFilesForRoots(['/path/to/test'], {
-  lastCommit: true,
-  withAncestor: true,
-}).then((files) => {
-  /*
-  {
-    repos: [],
-    changedFiles: []
-  }
-  */
-});
-```
-
-```javascript
-import {findRepos} from 'jest-changed-files';
-
-findRepos(['/path/to/test']).then((repos) => {
-  /*
-  {
-    git: Set<Path>,
-    hg: Set<Path>
-  }
-  */
-});
+function changedFiles(cwd) {
+  return Promise.all([
+    git.isGitRepository(cwd),
+    hg.isHGRepository(cwd),
+  ]).then(([gitRoot, hgRoot]) => {
+    if (gitRoot !== null) {
+      return git.findChangedFiles(gitRoot);
+    } else if (hgRoot !== null) {
+      return hg.findChangedFiles(hgRoot);
+    } else {
+      throw new Error('Not in a git or hg repo');
+    }
+  });
+}
 ```

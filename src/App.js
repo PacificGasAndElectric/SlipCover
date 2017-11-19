@@ -3,12 +3,7 @@ import * as queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js'
 import './App.css';
-import {
-  Button,
-  ButtonGroup,
-  DropdownButton,
-  MenuItem
-} from 'react-bootstrap';
+// import {Button} from 'react-bootstrap';
 
 class App extends Component {
   constructor(props) {
@@ -18,25 +13,31 @@ class App extends Component {
       allKeys: [],
       currentPage: 1,
       rowsPerPage: 25,
-      pageCount: 0, //Required. The total number of pages.
-      //pageRangeDisplayed: 5, //Required. The range of pages displayed.
-      // marginPagesDisplayed: 2, //Required. The number of pages to display for margins
+      pageCount: 0,
       value: '',
+      searchValue: '',
+      foundID: '',
       bucket: ['beer-sample'],
+      syncgatewayUrl: 'http://localhost:4984',
       selectedBucket: ''
     };
     this.updateJson = this.updateJson.bind(this);
-    this.channelHandleChecked = this.channelHandleChecked.bind(this);
+    this.getChannelFeed = this.getChannelFeed.bind(this);
     this.bucketHandleChecked = this.bucketHandleChecked.bind(this);
-  }
-
-  componentWillMount() {
-    this.getAllAvailableKeys();
+    this.searchHandleSubmit = this.searchHandleSubmit.bind(this);
+    this.searchHandleChange = this.searchHandleChange.bind(this);
+    this.searchDocPerId = this.searchDocPerId.bind(this);
   }
 
   async getAllAvailableKeys() {
     try {
-      const res = await fetch('http://localhost:4984/beer-sample/_all_docs?access=false&include_docs=false', {
+      const syncgatewayUrl = this.state.syncgatewayUrl;
+      const selectedBucket = this.state.selectedBucket;
+      const params = {
+        access: false,
+        include_docs: false,
+      }
+      const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(params)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -50,27 +51,29 @@ class App extends Component {
     newState.pageCount = Math.ceil(trueResult.length/this.state.rowsPerPage);
     newState.allKeys = trueResult;
     this.setState(newState);
-
     console.log('this.state.pageCount: ', this.state.pageCount);
+    this.getChannelFeed();
+  
     return Promise.resolve(trueResult);
     } catch (err) {
       console.log(err);
     }
   }
 
-  async channelHandleChecked() {
-    console.log(`Grabbing ${this.state.selectedChannel} channel`);
+  async getChannelFeed() {
     console.log(' CURRENT PAGE: ' + this.state.currentPage);
-
     const startIdx = (this.state.currentPage - 1) * (this.state.rowsPerPage) + 1;
     const endIdx = (this.state.currentPage) * (this.state.rowsPerPage) + 1;
 
     try {
+      const syncgatewayUrl = this.state.syncgatewayUrl;
+      const selectedBucket = this.state.selectedBucket;      
       const params = {
+        access: false,
         include_docs: true,
         keys: JSON.stringify(this.state.allKeys.slice(startIdx, endIdx )),
       };
-      const res = await fetch(`http://localhost:4984/beer-sample/_all_docs?access=false&${queryString.stringify(params)}`, {
+      const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(params)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -90,10 +93,13 @@ class App extends Component {
   async updateJson(editedDoc, docId){
     const arr = this.state.data;
     let doc = ''
-    arr.find((newDoc, i) => {
-      if (newDoc._id === docId) {
+    arr.find((obj, i) => {
+      console.log('i: ', i);
+      if (obj._id === docId) {
         arr[i] = JSON.parse(editedDoc);
-        arr[i].name = 'ixak';
+        arr[i]._id = obj._id; // if user try to chnage doc _id
+        arr[i]._rev = obj._rev; // if user try to chnage doc _rev
+        arr[i].name = 'Ibrahim';
         arr[i].updated = new Date().toJSON();
         doc =  arr[i];
         return true; // stop searching
@@ -102,11 +108,13 @@ class App extends Component {
     });
     console.log('doc before update in sync-gateway: ', doc);
     try{
+      const syncgatewayUrl = this.state.syncgatewayUrl;
+      const selectedBucket = this.state.selectedBucket;            
       const params = {
         new_edits: true,
         rev: doc._rev,
       };;
-      const res = await fetch(`http://localhost:4984/beer-sample/${doc._id}?${queryString.stringify(params)}`, {
+      const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/${doc._id}?${queryString.stringify(params)}`, {
         method: 'PUT',
         headers: {
           'accept': 'application/json',
@@ -115,7 +123,8 @@ class App extends Component {
         body: JSON.stringify(doc),
       });
       if (!res.ok) throw Error('bad data fetch');
-      this.channelHandleChecked();
+      this.getChannelFeed();
+
     }catch (err){
       console.log(err);
     }
@@ -127,23 +136,57 @@ class App extends Component {
     this.setState(newState, () => {
       console.log('selectedBucket: ', this.state.selectedBucket);
     });
-    this.channelHandleChecked();
+    this.getAllAvailableKeys();
   }
 
   handlePageClick = (data) => {
     const currentPage = (data.selected + 1);
     this.setState({currentPage: currentPage}, () => {
-      this.channelHandleChecked();
+      this.getChannelFeed();
     });
   };
+
+  searchHandleChange(event){
+    console.log('search clicked!');
+    this.setState({searchValue: event.target.value});
+  }
+
+  // search for doc by ID and return it if found
+  searchHandleSubmit(event) {
+    const newState = this.state;
+    const key = this.state.searchValue.split(' ').join('') // truncate spaces
+    const pos = this.state.allKeys.indexOf(key);
+    if (pos !== -1){
+      newState.foundID = key;
+      this.setState(newState);
+      this.searchDocPerId(pos);
+    }else{
+      alert('Document id is not found!');
+    }
+    event.preventDefault();
+  }
+
+  // update page number if doc is found
+  searchDocPerId(pos){
+    let pageNum = 1;
+    while(pos > this.state.rowsPerPage){
+      pos -=this.state.rowsPerPage;
+      pageNum +=1;
+    }
+    console.log('Key is found in pageNumber: ', pageNum);
+    this.setState({ currentPage: pageNum}, () => {
+      this.getChannelFeed();      
+    });
+  }
 
   render() {
     return (
       <div>
-        <h1 className="header"> Sync-Gateway-LazyBoy Open Source </h1>
         <div className="menuBar">
-          {/* Buckets dropdown menu */}
-          <div className="bucket-box">
+          <h1 className="header"> Sync-Gateway-Cushion Open Source </h1>
+          <div className="menuRow">
+            {/* Buckets dropdown menu */}
+            <div className="bucket-box">
               <select
                 className="bucketSelectList"
                 onChange={(e) => {
@@ -156,8 +199,19 @@ class App extends Component {
                   <option key={m.toString()} value={m}>{m}</option>
                 ))}
               </select>
+            </div>
+            {/* search document id */}
+            <div className="search">
+              <form className="inputBox" onSubmit={this.searchHandleSubmit}>
+                <input className="label" type="text" name="name" placeholder="Document ID"
+                  value={this.state.searchValue} onChange={this.searchHandleChange}
+                />
+                <input className="submit" type="submit" value="&#x1F50D; Search" />
+              </form>
+            </div>
           </div>
         </div>
+
         <div>
           <ReactPaginate previousLabel={"previous"}
             nextLabel={"next"}
@@ -182,6 +236,7 @@ class App extends Component {
                   index={object._id}
                   prop={object}
                   updateJson={this.updateJson}
+                  foundID={this.state.foundID}                  
                 />
               );
             }

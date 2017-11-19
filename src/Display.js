@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+let fileDownload = require('react-file-download');
 
 class Display extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class Display extends Component {
     this.cancelBtn = this.cancelBtn.bind(this);
     this.noSubmit = this.noSubmit.bind(this);
     this.yesSubmit = this.yesSubmit.bind(this);
+    this.download = this.download.bind(this);    
   }
 
   static get propTypes() {
@@ -19,6 +21,7 @@ class Display extends Component {
       prop: PropTypes.object.isRequired,
       index: PropTypes.string.isRequired,
       updateJson: PropTypes.func.isRequired,
+      foundID: PropTypes.string.isRequired,
     };
   }
 
@@ -83,13 +86,35 @@ class Display extends Component {
     const newState = this.state;
     newState.state = false;
     newState.confirm = false;
+    newState.status = false;
     this.setState(newState);
   }
+
+  download() {
+    fileDownload(JSON.stringify(this.props.prop, null, 2), 'filename.json');
+  }
+
+  // colorful border if id found
+  viewerBox(){
+    let viewerBox = '';
+    if (this.props.foundID === this.props.prop._id){
+      console.log('id found in search: ', this.props.foundID);      
+      viewerBox = (
+        <pre id="highlightID">{`id: ${this.props.prop._id}`}</pre>
+      );
+    }else {
+      viewerBox = (
+        <pre>{`id: ${this.props.prop._id}`}</pre>        
+      );
+    }
+    return viewerBox;
+  }
+
 
   renderNormal() {
     return (
       <div className="editBtnJsonList">
-        <pre>{JSON.stringify(this.props.prop, null, 2)}</pre>
+        {this.viewerBox()}
         <button onClick={this.editBtn} className="edit-button">
           Edit
         </button>
@@ -112,6 +137,9 @@ class Display extends Component {
         <button onClick={this.cancelBtn} className="cancel-button">
           Cancel
         </button>
+        <a>
+          <button className="downloadBtn" onClick={() => this.download()}>Download</button>
+        </a>
       </div>
     );
   }
