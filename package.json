@@ -18,7 +18,7 @@
     "react-scripts": "1.0.14"
   },
   "scripts": {
-    "docker-up": "docker-compose up --build -d",
+    "prestart": "docker-compose up --build -d",
     "start": "react-scripts start",
     "docker-down": "docker-compose down",
     "build": "react-scripts build",

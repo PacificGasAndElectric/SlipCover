@@ -251,7 +251,36 @@ li {
   justify-content: center;
 }
 
-@keyframes App-logo-spin {
+.yt-loader {
+  width: 100%;
+  height: 3px;
+  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+  animation: loader 55s ease-in-out;
+}
+
+@keyframes loader {
+  0%{
+    width: 0%;
+    filter: hue-rotate(0deg);
+  }
+  25%{
+    width: 23%;
+    filter: hue-rotate(50deg);    
+  }
+  50%{
+    width: 50%;
+    filter: hue-rotate(83deg);    
+  }
+  75%{
+    width: 75%;
+    filter: hue-rotate(120deg);    
+  }
+  100%{
+    width: 100%;
+    filter: hue-rotate(200deg);    
+  }
+}
+/* @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
+} */

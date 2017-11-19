@@ -5,6 +5,7 @@ import Display from './Display.js'
 import './App.css';
 // import {Button} from 'react-bootstrap';
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -226,7 +227,6 @@ class App extends Component {
             activeClassName={"active"}
           />
         </div>
-
         <div>
           {this.state.data.map((object, i) => {
             if (this.state.selectedBucket){
@@ -240,6 +240,7 @@ class App extends Component {
                 />
               );
             }
+            return true;
           })}
         </div>
       </div>
