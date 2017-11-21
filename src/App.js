@@ -5,7 +5,6 @@ import Display from './Display.js'
 import './App.css';
 // import {Button} from 'react-bootstrap';
 
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -93,7 +92,7 @@ class App extends Component {
 
   async updateJson(editedDoc, docId){
     const arr = this.state.data;
-    let doc = ''
+    let doc = '';
     arr.find((obj, i) => {
       console.log('i: ', i);
       if (obj._id === docId) {

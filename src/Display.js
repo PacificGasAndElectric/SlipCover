@@ -49,7 +49,7 @@ class Display extends Component {
     const jsonStatus = this.IsJsonString(this.refs.newText.value);
     if (jsonStatus) {
       this.setState({ confirm: true });
-      document.getElementById('enableTextArea').disabled = true;
+      this.viewerForm();
     } else {
       alert('This is NOT accepable JSON format!');
     }
@@ -82,7 +82,7 @@ class Display extends Component {
 
   noSubmit() {
     console.log('no submit clicked');
-    document.getElementById('enableTextArea').disabled = false;
+    this.viewerForm();
     const newState = this.state;
     newState.state = false;
     newState.confirm = false;
@@ -97,7 +97,7 @@ class Display extends Component {
   // colorful border if id found
   viewerBox(){
     let viewerBox = '';
-    if (this.props.foundID === this.props.prop._id){
+    if (this.props.foundID === this.props.prop._id){ //highlightID
       console.log('id found in search: ', this.props.foundID);      
       viewerBox = (
         <pre id="highlightID">{`id: ${this.props.prop._id}`}</pre>
@@ -110,6 +110,28 @@ class Display extends Component {
     return viewerBox;
   }
 
+  viewerForm(){
+    let viewerForm = '';
+    if (this.state.confirm){ //readOnly
+      viewerForm = (
+        <textarea
+          readOnly
+          ref="newText"
+          id="enableTextArea"
+          defaultValue={JSON.stringify(this.props.prop, null, 2)}
+        />
+      );
+    }else{
+      viewerForm = (
+        <textarea
+          ref="newText"
+          id="enableTextArea"
+          defaultValue={JSON.stringify(this.props.prop, null, 2)}
+        />
+      );
+    }
+    return viewerForm;
+  }
 
   renderNormal() {
     return (
@@ -125,11 +147,7 @@ class Display extends Component {
   renderForm() {
     return (
       <div className="editBtnJsonList">
-        <textarea
-          ref="newText"
-          id="enableTextArea"
-          defaultValue={JSON.stringify(this.props.prop, null, 2)}
-        />
+        {this.viewerForm()}
         <button onClick={() => this.saveBtn()} className="save-button">
           Save
         </button>
