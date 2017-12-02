@@ -160,6 +160,14 @@
 
 .cancel-button {
   background-color: lightgray;
+  color: blue;
+  font-size: 12px;
+  cursor: pointer;
+  height: 30px;
+}
+
+.remove-button {
+  background-color: lightgray;
   color: red;
   font-size: 12px;
   cursor: pointer;
