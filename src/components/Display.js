@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {saveDocument} from '../actions';
+import {saveDocument, removeDocument} from '../actions';
 let fileDownload = require('react-file-download');
 
 class Display extends Component {
@@ -46,7 +46,6 @@ class Display extends Component {
   }
 
   saveBtn() {    
-    console.log('index in saveBtn', this.props.index);
     const jsonStatus = this.IsJsonString(this.refs.newText.value);
     if (jsonStatus) {
       this.setState({ confirm: true });
@@ -58,6 +57,7 @@ class Display extends Component {
 
   async removeBtn(){
     await this.props.removeJson(this.props.index);
+    this.props.removeDocument(this.props.index);
     this.setState({ status:false, confirm:false });    
   }
 
@@ -190,4 +190,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {saveDocument}) (Display);
+export default connect(mapStateToProps, {saveDocument, removeDocument}) (Display);

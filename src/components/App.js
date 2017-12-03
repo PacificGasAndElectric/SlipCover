@@ -4,7 +4,12 @@ import ReactPaginate from 'react-paginate';
 import Display from './Display.js'
 import '../App.css';
 import {connect} from 'react-redux';
-import {addAllKeys, saveDocument} from '../actions';
+import {
+  addAllKeys, 
+  saveDocument, 
+  loadSuccess, 
+  loadFailed
+} from '../actions';
 
 class App extends Component {
   constructor(props) {
@@ -15,7 +20,7 @@ class App extends Component {
       currentPage: 1,
       rowsPerPage: 25,
       pageCount: 0,
-      value: '',
+      value: '', 
       searchValue: '',
       foundID: '',
       bucket: ['beer-sample'],
@@ -48,6 +53,7 @@ class App extends Component {
     });
     if (!res.ok) throw Error('bad ID\'s fetch');
     const json = await res.json();
+    this.props.loadSuccess(json);
     const trueResult = json.rows.map(element => element.id);
 
     const newState = this.state;
@@ -60,7 +66,8 @@ class App extends Component {
   
     return Promise.resolve(trueResult);
     } catch (err) {
-      console.log(err);
+      this.props.loadFailed(err);      
+      // console.log(err);
     }
   }
 
@@ -112,7 +119,7 @@ class App extends Component {
       }
       return false;
     });
-    console.log('doc before update in sync-gateway: ', doc);
+    // console.log('doc before update in sync-gateway: ', doc);
     try{
       const syncgatewayUrl = this.state.syncgatewayUrl;
       const selectedBucket = this.state.selectedBucket;            
@@ -150,7 +157,7 @@ class App extends Component {
       }
       return false;
     });
-    console.log('doc before deleted in sync-gateway: ', doc);
+    // console.log('doc before deleted in sync-gateway: ', doc);
     try{
       const syncgatewayUrl = this.state.syncgatewayUrl;
       const selectedBucket = this.state.selectedBucket;            
@@ -297,4 +304,12 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {addAllKeys, saveDocument}) (App);
+export default connect(
+  mapStateToProps, 
+  {
+    addAllKeys,
+    saveDocument,
+    loadSuccess,
+    loadFailed
+  }
+) (App);
