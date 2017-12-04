@@ -7,8 +7,10 @@ import {connect} from 'react-redux';
 import {
   addAllKeys, 
   saveDocument, 
-  loadSuccess, 
-  loadFailed
+  loadAllKeysSuccess, 
+  loadAllKeysFailed,
+  loadDataSuccess,
+  loadDataFailed
 } from '../actions';
 
 class App extends Component {
@@ -37,38 +39,37 @@ class App extends Component {
     this.searchDocPerId = this.searchDocPerId.bind(this);
   }
 
-  async getAllAvailableKeys() {
-    try {
-      const syncgatewayUrl = this.state.syncgatewayUrl;
-      const selectedBucket = this.state.selectedBucket;
-      const params = {
-        access: false,
-        include_docs: false,
-      }
-      const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(params)}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!res.ok) throw Error('bad ID\'s fetch');
-    const json = await res.json();
-    this.props.loadSuccess(json);
-    const trueResult = json.rows.map(element => element.id);
+  async getAllAvailableKeys() {      
+      try {
+        const syncgatewayUrl = this.state.syncgatewayUrl;
+        const selectedBucket = this.state.selectedBucket;
+        const params = {
+          access: false,
+          include_docs: false,
+        }
+        const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(params)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!res.ok) throw Error('bad ID\'s fetch');
+      const json = await res.json();
+      this.props.loadAllKeysSuccess(json);
+      const trueResult = json.rows.map(element => element.id);
 
-    const newState = this.state;
-    newState.pageCount = Math.ceil(trueResult.length/this.state.rowsPerPage);
-    newState.allKeys = trueResult;
-    this.props.addAllKeys(trueResult); //IXAK
-    this.setState(newState);
-    console.log('this.state.pageCount: ', this.state.pageCount);
-    this.getChannelFeed();
-  
-    return Promise.resolve(trueResult);
-    } catch (err) {
-      this.props.loadFailed(err);      
-      // console.log(err);
-    }
+      const newState = this.state;
+      newState.pageCount = Math.ceil(trueResult.length/this.state.rowsPerPage);
+      newState.allKeys = trueResult;
+      this.props.addAllKeys(trueResult); //IXAK
+      this.setState(newState);
+      console.log('this.state.pageCount: ', this.state.pageCount);
+      this.getChannelFeed();
+    
+      return Promise.resolve(trueResult);
+      } catch (err) {
+        this.props.loadAllKeysFailed(err);      
+      }
   }
 
   async getChannelFeed() {
@@ -92,12 +93,13 @@ class App extends Component {
     });
     if (!res.ok) throw Error('bad data fetch');
     const json = await res.json();
+    this.props.loadDataSuccess(json);
     const trueResult = json.rows.map(element => element.doc);
 
     this.setState({ data: trueResult });
     return Promise.resolve(trueResult);
     } catch (err) {
-      console.log(err);
+      this.props.loadDataFailed(err);
     }
   }
 
@@ -119,7 +121,7 @@ class App extends Component {
       }
       return false;
     });
-    // console.log('doc before update in sync-gateway: ', doc);
+
     try{
       const syncgatewayUrl = this.state.syncgatewayUrl;
       const selectedBucket = this.state.selectedBucket;            
@@ -157,7 +159,7 @@ class App extends Component {
       }
       return false;
     });
-    // console.log('doc before deleted in sync-gateway: ', doc);
+
     try{
       const syncgatewayUrl = this.state.syncgatewayUrl;
       const selectedBucket = this.state.selectedBucket;            
@@ -174,7 +176,6 @@ class App extends Component {
       console.log(err);
     }
   }
-
 
   bucketHandleChecked(event) {
     const newState = this.state;
@@ -309,7 +310,9 @@ export default connect(
   {
     addAllKeys,
     saveDocument,
-    loadSuccess,
-    loadFailed
+    loadAllKeysSuccess,
+    loadAllKeysFailed,
+    loadDataSuccess,
+    loadDataFailed
   }
 ) (App);

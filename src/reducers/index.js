@@ -3,9 +3,16 @@ import {
     ADD_ALLKEYS,
     SAVE_DOCUMENT,
     REMOVE_DOCUMENT,
-    LOAD_SUCCESS,
-    LOAD_FAILED
+    LOAD_ALLKEYS_SUCCESS,
+    LOAD_AllKEYS_FAILED,
+    LOAD_DATA_SUCCESS,
+    LOAD_DATA_FAILED
 }  from '../constants';
+import { createLogger } from 'redux-logger';
+
+createLogger({
+    collapsed: (state =[], action) => action.type === LOAD_ALLKEYS_SUCCESS
+});
 
 const addAllKeys = (action) => {
     const {allKeys} = action;
@@ -29,14 +36,28 @@ const removeDocument = (state=[], action) => {
     }    
 }
 
-const loadSuccess = (state={}, action) => {
-    const { response } = action;
+const loadAllKeysSuccess = (state=[], action) => {
+    const { keysResponse } = action;
     return {
-        response
+        keysResponse
     }
 }
 
-const loadFailed = (state=[], action) => {
+const loadDataSuccess = (state=[], action) => {
+    const { dataResponse } = action;
+    return {
+        dataResponse
+    }
+}
+
+const loadAllKeysFailed = (state=[], action) => {
+    const { error } = action;
+    return {
+        error
+    }
+}
+
+const loadDataFailed = (state=[], action) => {
     const { error } = action;
     return {
         error
@@ -58,14 +79,22 @@ const reducers = (state =[], action) => {
             reducers = [...state, removeDocument(state, action)]
             // console.log('REMOVE_DOCUMENT in reducer.js: ', reducers);
             return reducers;        
-        case LOAD_SUCCESS:
-            reducers = [...state, loadSuccess(state, action)]
-            // console.log('LOAD_SUCCESS in reducer.js: ', reducers);
+        case LOAD_ALLKEYS_SUCCESS:
+            reducers = [...state, loadAllKeysSuccess(state, action)]
+            // console.log('LOAD_ALLKEYS_SUCCESS in reducer.js: ', reducers);
             return reducers;
-        case LOAD_FAILED:
-            reducers = [...state, loadFailed(state, action)]
-            // console.log('LOAD_FAILED in reducer.js: ', reducers);
-            return reducers;   
+        case LOAD_DATA_SUCCESS:
+            reducers = [...state, loadDataSuccess(state, action)]
+            // console.log('LOAD_DATA_SUCCESS in reducer.js: ', reducers);
+            return reducers; 
+        case LOAD_AllKEYS_FAILED:
+            reducers = [...state, loadAllKeysFailed(state, action)]
+            // console.log('LOAD_AllKEYS_FAILED in reducer.js: ', reducers);
+            return reducers;
+        case LOAD_DATA_FAILED:
+            reducers = [...state, loadDataFailed(state, action)]
+            // console.log('LOAD_DATA_FAILED in reducer.js: ', reducers);
+            return reducers;
         default:
             return state;
     }

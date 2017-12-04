@@ -4,8 +4,10 @@ import {
     ADD_ALLKEYS,
     SAVE_DOCUMENT,
     REMOVE_DOCUMENT,
-    LOAD_SUCCESS,
-    LOAD_FAILED
+    LOAD_ALLKEYS_SUCCESS,
+    LOAD_AllKEYS_FAILED,
+    LOAD_DATA_SUCCESS,
+    LOAD_DATA_FAILED
 }  from '../constants';
 
 export const addAllKeys = (allKeys) => {
@@ -13,7 +15,7 @@ export const addAllKeys = (allKeys) => {
         type: ADD_ALLKEYS,
         allKeys: allKeys
     }
-    console.log('ADD_ALLKEYS in actions.js: ', action);
+    // console.log('ADD_ALLKEYS in actions.js: ', action);
     return action;
 }
 
@@ -23,7 +25,7 @@ export const saveDocument = (id, newDoc) => {
         id, 
         newDoc
     }
-    console.log('SAVE_DOCUMENT in action.js: ', action);
+    // console.log('SAVE_DOCUMENT in action.js: ', action);
     return action;
 }
 
@@ -32,24 +34,42 @@ export const removeDocument = (id) => {
         type: REMOVE_DOCUMENT,
         id    
     }
-    console.log('REMOVE_DOCUMENT in action.js: ', action);
+    // console.log('REMOVE_DOCUMENT in action.js: ', action);
     return action;
 }
 
-export const loadSuccess = (response) => {
+export const loadAllKeysSuccess = (keysResponse) => {
     const action = {
-        type: LOAD_SUCCESS,
-        response
+        type: LOAD_ALLKEYS_SUCCESS,
+        keysResponse
     }
-    console.log('LOAD_SUCCESS in action.js: ', action);
+    // console.log('LOAD_ALLKEYS_SUCCESS in action.js: ', action);
     return action;
 }
 
-export const loadFailed = (error) => {
+export const loadDataSuccess = (dataResponse) => {
     const action = {
-        type: LOAD_FAILED,
+        type: LOAD_DATA_SUCCESS,
+        dataResponse
+    }
+    // console.log('LOAD_DATA_SUCCESS in action.js: ', action);
+    return action;
+}
+
+export const loadAllKeysFailed = (error) => {
+    const action = {
+        type: LOAD_AllKEYS_FAILED,
         error
     }
-    console.log('LOAD_FAILED in action.js: ', action);
+    // console.log('LOAD_AllKEYS_FAILED in action.js: ', action);
+    return action;
+}
+
+export const loadDataFailed = (error) => {
+    const action = {
+        type: LOAD_DATA_FAILED,
+        error
+    }
+    // console.log('LOAD_AllKEYS_FAILED in action.js: ', action);
     return action;
 }

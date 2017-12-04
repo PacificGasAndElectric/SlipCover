@@ -57,7 +57,7 @@ class Display extends Component {
 
   async removeBtn(){
     await this.props.removeJson(this.props.index);
-    this.props.removeDocument(this.props.index);
+    await this.props.removeDocument(this.props.index);
     this.setState({ status:false, confirm:false });    
   }
 
