@@ -73,25 +73,16 @@
   "eslintConfig": {
     "extends": [
       "airbnb",
+      "plugin:flowtype/recommended",
       "prettier",
+      "prettier/flowtype",
       "prettier/react"
-    ],
-    "env": {
-      "browser": true
-    },
-    "parserOptions": {
-      "ecmaVersion": 6
-    },
-    "plugins": [
-      "prettier"
     ],
     "rules": {
       "react/no-string-refs": "off",
       "react/no-unused-prop-types": "off",
       "import/no-unresolved": 0,
       "import/extensions": 0,
-      "import/no-extraneous-dependencies": "off",
-      "no-console": "off",
       "prettier/prettier": [
         "error",
         {
@@ -100,11 +91,8 @@
           "trailingComma": "all"
         }
       ],
-      "react/jsx-wrap-multilines": 0,
-      "arrow-parens": [
-        "error",
-        "as-needed"
-      ],
+      "no-console": "off",
+      "import/no-extraneous-dependencies": "off",
       "react/jsx-filename-extension": [
         1,
         {
@@ -113,7 +101,24 @@
             ".jsx"
           ]
         }
+      ],
+      "react/jsx-wrap-multilines": "off",
+      "arrow-parens": [
+        "error",
+        "as-needed"
       ]
+    },
+    "plugins": [
+      "prettier",
+      "flowtype"
+    ],
+    "settings": {
+      "import/resolver": [
+        "webpack"
+      ]
+    },
+    "env": {
+      "browser": true
     },
     "globals": {
       "fetch": true

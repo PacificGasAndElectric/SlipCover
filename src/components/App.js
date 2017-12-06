@@ -3,6 +3,7 @@ import * as queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js'
 import '../App.css';
+// import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux';
 import {
   addAllKeys, 
@@ -73,9 +74,14 @@ class App extends Component {
   }
 
   async getChannelFeed() {
+    // const {storeData} = this.props; // to access store methods!
+    
     console.log(' CURRENT PAGE: ' + this.state.currentPage);
     const startIdx = (this.state.currentPage - 1) * (this.state.rowsPerPage) + 1;
     const endIdx = (this.state.currentPage) * (this.state.rowsPerPage) + 1;
+
+    // const ADD_ALLKEYS = storeData.filter(ele => ele.type === 'ADD_ALLKEYS');
+    // console.log('ADD_KEYS in feed: ', ADD_ALLKEYS[0].allKeys);
 
     try {
       const syncgatewayUrl = this.state.syncgatewayUrl;
@@ -84,6 +90,7 @@ class App extends Component {
         access: false,
         include_docs: true,
         keys: JSON.stringify(this.state.allKeys.slice(startIdx, endIdx )),
+        // keys: JSON.stringify(ADD_ALLKEYS[0].allKeys.slice(startIdx, endIdx )), //redux 
       };
       const res = await fetch(`${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(params)}`, {
       method: 'GET',
@@ -297,7 +304,6 @@ class App extends Component {
 }
 
 // allows reducers in the redux store to become accessible within React Components through this.props.
-// look at "renderReminder()"
 function mapStateToProps(state) {
   // console.log('state in mapStateToProps: ', state);
   return {
@@ -306,13 +312,25 @@ function mapStateToProps(state) {
 }
 
 export default connect(
-  mapStateToProps, 
-  {
+  (mapStateToProps), 
+  ({
     addAllKeys,
     saveDocument,
     loadAllKeysSuccess,
     loadAllKeysFailed,
     loadDataSuccess,
     loadDataFailed
-  }
+  }),
 ) (App);
+
+// export default connect(
+//   ({pageNumber}) => ({pageNumber}), 
+//   dispatch => bindActionCreators({
+//     addAllKeys,
+//     saveDocument,
+//     loadAllKeysSuccess,
+//     loadAllKeysFailed,
+//     loadDataSuccess,
+//     loadDataFailed
+//   }, dispatch),
+// ) (App);

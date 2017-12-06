@@ -14,40 +14,58 @@ createLogger({
     collapsed: (state =[], action) => action.type === LOAD_ALLKEYS_SUCCESS
 });
 
-const addAllKeys = (action) => {
-    const {allKeys} = action;
-    return {
-        allKeys
-    }
+const addAllKeys = (state=[], action) => {
+    const obj = state.filter(ele => !ele.allKeys);
+    obj.push(action);
+    return obj;
 }
 
 const saveDocument = (state=[], action) => {
-    const { id, newDoc } = action;
-    return {
-        id, 
-        newDoc
-    } 
+    let id = [];
+    let newDoc = [];
+    id.push(action.id);
+    newDoc.push(action.newDoc)
+
+    state.filter(ele => {
+        if (ele.type === action.type){
+            id = id.concat(ele.id);
+            newDoc = newDoc.concat(ele.newDoc);
+        }
+        return false;
+    })
+    action.id = id;
+    action.newDoc = newDoc;
+    const obj = state.filter(ele => ele.type !== action.type) // eliminate the old action
+    obj.push(action); // push action with new id's
+    return obj; 
 }
 
 const removeDocument = (state=[], action) => {
-    const { id } = action;
-    return {
-        id
-    }    
+    let id = [];
+    id.push(action.id);     
+
+    state.filter(ele => {
+        if (ele.type === action.type){
+            id = id.concat(ele.id);
+        }
+        return false;
+    })
+    action.id = id;
+    const obj = state.filter(ele => ele.type !== action.type) // eliminate the old action
+    obj.push(action); // push action with new id's
+    return obj; 
 }
 
 const loadAllKeysSuccess = (state=[], action) => {
-    const { keysResponse } = action;
-    return {
-        keysResponse
-    }
+    const obj = state.filter(ele => !ele.keysResponse);
+    obj.push(action);
+    return obj;
 }
 
 const loadDataSuccess = (state=[], action) => {
-    const { dataResponse } = action;
-    return {
-        dataResponse
-    }
+    const obj = state.filter(ele => !ele.dataResponse);
+    obj.push(action);
+    return obj;
 }
 
 const loadAllKeysFailed = (state=[], action) => {
@@ -68,32 +86,26 @@ const reducers = (state =[], action) => {
     let reducers = null;
     switch (action.type) {
         case ADD_ALLKEYS:
-            reducers = [...state, addAllKeys(action)];
-            // console.log('ADD_ALLKEYS in reducer.js: ', reducers);
+            reducers = addAllKeys(state, action);
+            console.log('ADD_ALLKEYS in reducer.js: ', reducers);
             return reducers;
         case SAVE_DOCUMENT:
-            reducers = [...state, saveDocument(state, action)]
-            // console.log('SAVE_DOCUMENT in reducer.js: ', reducers);
+            reducers = saveDocument(state, action)
             return reducers;
         case REMOVE_DOCUMENT:
-            reducers = [...state, removeDocument(state, action)]
-            // console.log('REMOVE_DOCUMENT in reducer.js: ', reducers);
+            reducers = removeDocument(state, action)
             return reducers;        
         case LOAD_ALLKEYS_SUCCESS:
-            reducers = [...state, loadAllKeysSuccess(state, action)]
-            // console.log('LOAD_ALLKEYS_SUCCESS in reducer.js: ', reducers);
+            reducers = loadAllKeysSuccess(state, action)
             return reducers;
         case LOAD_DATA_SUCCESS:
-            reducers = [...state, loadDataSuccess(state, action)]
-            // console.log('LOAD_DATA_SUCCESS in reducer.js: ', reducers);
+            reducers = loadDataSuccess(state, action)
             return reducers; 
         case LOAD_AllKEYS_FAILED:
             reducers = [...state, loadAllKeysFailed(state, action)]
-            // console.log('LOAD_AllKEYS_FAILED in reducer.js: ', reducers);
             return reducers;
         case LOAD_DATA_FAILED:
             reducers = [...state, loadDataFailed(state, action)]
-            // console.log('LOAD_DATA_FAILED in reducer.js: ', reducers);
             return reducers;
         default:
             return state;
