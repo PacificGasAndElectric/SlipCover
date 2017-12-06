@@ -194,6 +194,7 @@ class App extends Component {
     this.getAllAvailableKeys();
   }
 
+  //eslint-disable-next-line
   handlePageClick = (data) => {
     const currentPage = (data.selected + 1);
     this.setState({currentPage: currentPage}, () => {
@@ -300,7 +301,7 @@ class App extends Component {
         </div>
       </div>
     );
-  }
+  } 
 }
 
 // allows reducers in the redux store to become accessible within React Components through this.props.

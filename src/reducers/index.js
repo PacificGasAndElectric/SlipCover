@@ -8,11 +8,6 @@ import {
     LOAD_DATA_SUCCESS,
     LOAD_DATA_FAILED
 }  from '../constants';
-import { createLogger } from 'redux-logger';
-
-createLogger({
-    collapsed: (state =[], action) => action.type === LOAD_ALLKEYS_SUCCESS
-});
 
 const addAllKeys = (state=[], action) => {
     const obj = state.filter(ele => !ele.allKeys);
@@ -23,18 +18,22 @@ const addAllKeys = (state=[], action) => {
 const saveDocument = (state=[], action) => {
     let id = [];
     let newDoc = [];
+    let oldDoc = [];
     id.push(action.id);
     newDoc.push(action.newDoc)
+    oldDoc.push(action.oldDoc);
 
     state.filter(ele => {
         if (ele.type === action.type){
             id = id.concat(ele.id);
             newDoc = newDoc.concat(ele.newDoc);
+            oldDoc = oldDoc.concat(ele.oldDoc);
         }
         return false;
     })
     action.id = id;
     action.newDoc = newDoc;
+    action.oldDoc = oldDoc;
     const obj = state.filter(ele => ele.type !== action.type) // eliminate the old action
     obj.push(action); // push action with new id's
     return obj; 

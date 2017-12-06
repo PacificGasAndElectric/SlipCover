@@ -81,7 +81,7 @@ class Display extends Component {
   async yesSubmit() {
     console.log('yes submit with id: ', this.props.index);
     const newState = this.state;
-    await this.props.saveDocument(this.props.index, this.refs.newText.value);    
+    await this.props.saveDocument(this.props.index, JSON.parse(this.refs.newText.value), this.props.prop);    
     await this.props.updateJson(this.refs.newText.value, this.props.index);
     newState.status = false;
     this.setState(newState);

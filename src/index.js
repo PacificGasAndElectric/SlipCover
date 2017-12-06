@@ -9,7 +9,7 @@ import logger from 'redux-logger';
 // import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import promise from 'redux-promise';
-import registerServiceWorker from './registerServiceWorker'; // eslint-disable-line no-named-as-default
+import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(
     reducer, 

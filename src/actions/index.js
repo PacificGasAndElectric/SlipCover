@@ -19,11 +19,12 @@ export const addAllKeys = (allKeys) => {
     return action;
 }
 
-export const saveDocument = (id, newDoc) => {
+export const saveDocument = (id, newDoc, oldDoc) => {
     const action = {
         type: SAVE_DOCUMENT,
         id, 
-        newDoc
+        newDoc, 
+        oldDoc
     }
     // console.log('SAVE_DOCUMENT in action.js: ', action);
     return action;
