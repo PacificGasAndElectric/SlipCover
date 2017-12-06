@@ -5,7 +5,7 @@
 ## Build generated
 build/
 DerivedData/
-node_modules/
+node_modules
 
 ## Various settings
 *.pbxuser
