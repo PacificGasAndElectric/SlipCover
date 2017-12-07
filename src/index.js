@@ -1,25 +1,22 @@
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
-import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
 import reducer from './reducers';
-import logger from 'redux-logger';
-// import { createLogger } from 'redux-logger';
-import thunk from 'redux-thunk';
-import promise from 'redux-promise';
 import registerServiceWorker from './registerServiceWorker';
 
+/* eslint no-underscore-dangle: [2, { "allow": ["__REDUX_DEVTOOLS_EXTENSION__"] }] */
 const store = createStore(
-    reducer, 
-    applyMiddleware(thunk, promise, logger)
+  reducer,
+  global.__REDUX_DEVTOOLS_EXTENSION__ && global.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 // Provider - a component at the root of your redux application that provides the redux store globally.
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('root')
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root'),
 );
-    registerServiceWorker();
+registerServiceWorker();

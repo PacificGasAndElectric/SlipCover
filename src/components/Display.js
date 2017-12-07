@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {saveDocument, removeDocument} from '../actions';
-let fileDownload = require('react-file-download');
+import { connect } from 'react-redux';
+import { saveDocument, removeDocument } from '../actions';
+
+const fileDownload = require('react-file-download');
+
+/* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
+
+const IsJsonString = str => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
 
 class Display extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      status: false,
-    };
-    this.editBtn = this.editBtn.bind(this);
-    this.saveBtn = this.saveBtn.bind(this);
-    this.cancelBtn = this.cancelBtn.bind(this);
-    this.noSubmit = this.noSubmit.bind(this);
-    this.yesSubmit = this.yesSubmit.bind(this);
-    this.download = this.download.bind(this);    
-  }
-
   static get propTypes() {
     return {
       prop: PropTypes.object.isRequired,
@@ -28,25 +27,29 @@ class Display extends Component {
     };
   }
 
-  IsJsonString(str) {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: false,
+    };
+    this.editBtn = this.editBtn.bind(this);
+    this.saveBtn = this.saveBtn.bind(this);
+    this.cancelBtn = this.cancelBtn.bind(this);
+    this.noSubmit = this.noSubmit.bind(this);
+    this.yesSubmit = this.yesSubmit.bind(this);
+    this.download = this.download.bind(this);
   }
-  
+
   editBtn() {
     this.setState({ status: true });
   }
 
   cancelBtn() {
-    this.setState({ status:false, confirm:false });
+    this.setState({ status: false, confirm: false });
   }
 
-  saveBtn() {    
-    const jsonStatus = this.IsJsonString(this.refs.newText.value);
+  saveBtn() {
+    const jsonStatus = IsJsonString(this.refs.newText.value);
     if (jsonStatus) {
       this.setState({ confirm: true });
       this.submit();
@@ -55,10 +58,10 @@ class Display extends Component {
     }
   }
 
-  async removeBtn(){
+  async removeBtn() {
     await this.props.removeJson(this.props.index);
     await this.props.removeDocument(this.props.index);
-    this.setState({ status:false, confirm:false });    
+    this.setState({ status: false, confirm: false });
   }
 
   submit() {
@@ -81,7 +84,11 @@ class Display extends Component {
   async yesSubmit() {
     console.log('yes submit with id: ', this.props.index);
     const newState = this.state;
-    await this.props.saveDocument(this.props.index, JSON.parse(this.refs.newText.value), this.props.prop);    
+    await this.props.saveDocument(
+      this.props.index,
+      JSON.parse(this.refs.newText.value),
+      this.props.prop,
+    );
     await this.props.updateJson(this.refs.newText.value, this.props.index);
     newState.status = false;
     this.setState(newState);
@@ -101,26 +108,11 @@ class Display extends Component {
     fileDownload(JSON.stringify(this.props.prop, null, 2), 'filename.json');
   }
 
-  // colorful border if id found
-  viewerBox(){
-    let viewerBox = '';
-    if (this.props.foundID === this.props.prop._id){ //highlightID
-      console.log('id found in search: ', this.props.foundID);      
-      viewerBox = (
-        <pre id="highlightID">{`id: ${this.props.prop._id}`}</pre>
-      );
-    }else {
-      viewerBox = (
-        <pre>{`id: ${this.props.prop._id}`}</pre>        
-      );
-    }
-    return viewerBox;
-  }
-
-  viewerForm(){
+  viewerForm() {
     let viewerForm = '';
     const doc = this.props.prop;
-    if (this.state.confirm){ //readOnly
+    if (this.state.confirm) {
+      // readOnly
       viewerForm = (
         <textarea
           readOnly
@@ -129,7 +121,7 @@ class Display extends Component {
           defaultValue={JSON.stringify(doc, null, 2)}
         />
       );
-    }else{
+    } else {
       viewerForm = (
         <textarea
           ref="newText"
@@ -144,7 +136,11 @@ class Display extends Component {
   renderNormal() {
     return (
       <div className="editBtnJsonList">
-        {this.viewerBox()}
+        {this.props.foundID === this.props.prop._id ? (
+          <pre id="highlightID">{`id: ${this.props.prop._id}`}</pre>
+        ) : (
+          <pre>{`id: ${this.props.prop._id}`}</pre>
+        )}
         <button onClick={this.editBtn} className="edit-button">
           Edit
         </button>
@@ -167,7 +163,9 @@ class Display extends Component {
           Remove
         </button>
         <a>
-          <button className="downloadBtn" onClick={() => this.download()}>Download</button>
+          <button className="downloadBtn" onClick={() => this.download()}>
+            Download
+          </button>
         </a>
       </div>
     );
@@ -186,8 +184,10 @@ class Display extends Component {
 function mapStateToProps(state) {
   // console.log('state in mapStateToProps: ', state);
   return {
-    storeData: state
-  }
+    storeData: state,
+  };
 }
 
-export default connect(mapStateToProps, {saveDocument, removeDocument}) (Display);
+export default connect(mapStateToProps, { saveDocument, removeDocument })(
+  Display,
+);
