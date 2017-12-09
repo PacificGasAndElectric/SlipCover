@@ -1,76 +1,69 @@
 // Action Creators - methods that create and return actions for reducers to manipulate the redux store.
 // Actions - the plain JavaScript object that Action Creators return. Must include a type parameter with a Redux constant and a certain data payload.
 import {
-  ADD_ALLKEYS,
   SAVE_DOCUMENT,
   REMOVE_DOCUMENT,
   LOAD_ALLKEYS_SUCCESS,
   LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
   LOAD_DATA_FAILED,
+  SELECT_BUCKET,
+  UPDATE_CURRENT_PAGE,
+  UPDATE_PAGE_COUNT,
+  SEARCH_DOCUMENT,
+  FOUND_ID,
 } from '../constants';
 
-export const addAllKeys = allKeys => {
-  const action = {
-    type: ADD_ALLKEYS,
-    allKeys,
-  };
-  // console.log('ADD_ALLKEYS in actions.js: ', action);
-  return action;
-};
+export const loadAllKeysSuccess = allKeys => ({
+  type: LOAD_ALLKEYS_SUCCESS,
+  allKeys,
+});
 
-export const saveDocument = (id, newDoc, oldDoc) => {
-  const action = {
-    type: SAVE_DOCUMENT,
-    id,
-    newDoc,
-    oldDoc,
-  };
-  // console.log('SAVE_DOCUMENT in action.js: ', action);
-  return action;
-};
+export const saveDocument = (id, newDoc, oldDoc) => ({
+  type: SAVE_DOCUMENT,
+  id,
+  newDoc,
+  oldDoc,
+});
 
-export const removeDocument = id => {
-  const action = {
-    type: REMOVE_DOCUMENT,
-    id,
-  };
-  // console.log('REMOVE_DOCUMENT in action.js: ', action);
-  return action;
-};
+export const removeDocument = id => ({ type: REMOVE_DOCUMENT, id });
 
-export const loadAllKeysSuccess = keysResponse => {
-  const action = {
-    type: LOAD_ALLKEYS_SUCCESS,
-    keysResponse,
-  };
-  // console.log('LOAD_ALLKEYS_SUCCESS in action.js: ', action);
-  return action;
-};
+export const loadDataSuccess = dataResponse => ({
+  type: LOAD_DATA_SUCCESS,
+  dataResponse,
+});
 
-export const loadDataSuccess = dataResponse => {
-  const action = {
-    type: LOAD_DATA_SUCCESS,
-    dataResponse,
-  };
-  // console.log('LOAD_DATA_SUCCESS in action.js: ', action);
-  return action;
-};
+export const loadAllKeysFailed = error => ({
+  type: LOAD_ALLKEYS_FAILED,
+  error,
+});
 
-export const loadAllKeysFailed = error => {
-  const action = {
-    type: LOAD_ALLKEYS_FAILED,
-    error,
-  };
-  // console.log('LOAD_AllKEYS_FAILED in action.js: ', action);
-  return action;
-};
+export const loadDataFailed = error => ({
+  type: LOAD_DATA_FAILED,
+  error,
+});
 
-export const loadDataFailed = error => {
-  const action = {
-    type: LOAD_DATA_FAILED,
-    error,
-  };
-  // console.log('LOAD_AllKEYS_FAILED in action.js: ', action);
-  return action;
-};
+export const selectBucket = selected => ({
+  type: SELECT_BUCKET,
+  selected,
+});
+
+export const updateCurrentPage = currentPage => ({
+  type: UPDATE_CURRENT_PAGE,
+  currentPage,
+});
+
+export const updatePageCount = pageCount => ({
+  type: UPDATE_PAGE_COUNT,
+  pageCount,
+});
+
+export const searchDocument = searchValue => ({
+  type: SEARCH_DOCUMENT,
+  searchValue,
+});
+
+export const foundId = foundID => ({
+  type: FOUND_ID,
+  foundID,
+});

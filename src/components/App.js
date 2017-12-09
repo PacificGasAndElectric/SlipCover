@@ -6,45 +6,61 @@ import Display from './Display.js';
 // import Async from './Async';
 import '../App.css';
 import {
-  addAllKeys,
   saveDocument,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDataSuccess,
   loadDataFailed,
+  selectBucket,
+  updateCurrentPage,
+  updatePageCount,
+  searchDocument,
+  foundId,
 } from '../actions';
+import manifest from '../manifest.js';
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      allKeys: [],
-      currentPage: 1,
-      rowsPerPage: 25,
-      pageCount: 0,
-      value: '',
-      searchValue: '',
-      foundID: '',
-      bucket: ['beer-sample'],
-      syncgatewayUrl: 'http://localhost:4984',
-      selectedBucket: '',
-      bucketDefaultKey: false,
+      // data: [],
+      // allKeys: [],
+      // currentPage: 1,
+      // rowsPerPage: 25,
+      // pageCount: 0,
+      // value: '',
+      // searchValue: '',
+      // foundID: '',
+      // bucket: ['beer-sample'],
+      // syncgatewayUrl: 'http://localhost:4984',
+      // selectedBucket: '',
+      // bucketDefaultKey: false,
     };
     this.updateJson = this.updateJson.bind(this);
     this.removeJson = this.removeJson.bind(this);
     this.getChannelFeed = this.getChannelFeed.bind(this);
+    this.getAllAvailableKeys = this.getAllAvailableKeys.bind(this);
     this.bucketHandleChecked = this.bucketHandleChecked.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
     this.searchHandleSubmit = this.searchHandleSubmit.bind(this);
     this.searchHandleChange = this.searchHandleChange.bind(this);
-    this.searchDocPerId = this.searchDocPerId.bind(this);
+  }
+
+  componentWillMount() {
+    const { storeData } = this.props;
+    const currentPage = 1;
+    if (!storeData.currentPage) {
+      this.props.updateCurrentPage(currentPage);
+    }
   }
 
   async getAllAvailableKeys() {
+    const { storeData } = this.props;
+    console.log('storeData in keys: ', storeData);
     try {
-      const syncgatewayUrl = this.state.syncgatewayUrl;
-      const selectedBucket = this.state.selectedBucket;
+      const syncgatewayUrl = manifest.syncgatewayUrl;
+      const selectedBucket = storeData.selected;
       const params = {
         access: false,
         include_docs: false,
@@ -62,17 +78,14 @@ class App extends Component {
       );
       if (!res.ok) throw Error("bad ID's fetch");
       const json = await res.json();
-      // this.props.loadAllKeysSuccess(json);
       const trueResult = json.rows.map(element => element.id);
 
-      const newState = this.state;
-      newState.pageCount = Math.ceil(
-        trueResult.length / this.state.rowsPerPage,
-      );
-      newState.allKeys = trueResult;
-      // this.props.addAllKeys(trueResult); // IXAK
-      this.setState(newState);
-      console.log('this.state.pageCount: ', this.state.pageCount);
+      const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
+      console.log('pageCount: ', pageCount);
+      // this.props.updatePaging({ pageCount, currentPage: 1 }); // IXAK currentPage
+      this.props.updatePageCount(pageCount);
+
+      this.props.loadAllKeysSuccess(trueResult);
       this.getChannelFeed();
 
       return Promise.resolve(trueResult);
@@ -84,23 +97,21 @@ class App extends Component {
   }
 
   async getChannelFeed() {
-    // const {storeData} = this.props; // to access store methods!
-
-    console.log(` CURRENT PAGE: ${this.state.currentPage}`);
-    const startIdx = (this.state.currentPage - 1) * this.state.rowsPerPage + 1;
-    const endIdx = this.state.currentPage * this.state.rowsPerPage + 1;
-
-    // const ADD_ALLKEYS = storeData.filter(ele => ele.type === 'ADD_ALLKEYS');
-    // console.log('ADD_KEYS in feed: ', ADD_ALLKEYS[0].allKeys);
+    const { storeData } = this.props; // to access store methods!
+    console.log(` CURRENT PAGE: ${storeData.currentPage}`);
+    const rowsPerPage = manifest.rowsPerPage;
+    const currentPage = storeData.currentPage;
+    const startIdx = (currentPage - 1) * rowsPerPage;
+    const endIdx = currentPage * rowsPerPage;
 
     try {
-      const syncgatewayUrl = this.state.syncgatewayUrl;
-      const selectedBucket = this.state.selectedBucket;
+      const syncgatewayUrl = manifest.syncgatewayUrl;
+      const selectedBucket = storeData.selected;
+
       const params = {
         access: false,
         include_docs: true,
-        keys: JSON.stringify(this.state.allKeys.slice(startIdx, endIdx)),
-        // keys: JSON.stringify(ADD_ALLKEYS[0].allKeys.slice(startIdx, endIdx )), //redux
+        keys: JSON.stringify(storeData.allKeys.slice(startIdx, endIdx)),
       };
       const res = await fetch(
         `${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(
@@ -115,10 +126,10 @@ class App extends Component {
       );
       if (!res.ok) throw Error('bad data fetch');
       const json = await res.json();
-      // this.props.loadDataSuccess(json);
+      this.props.loadDataSuccess(json);
       const trueResult = json.rows.map(element => element.doc);
 
-      this.setState({ data: trueResult });
+      // this.setState({ data: trueResult });
       return Promise.resolve(trueResult);
     } catch (err) {
       console.log(err);
@@ -130,7 +141,7 @@ class App extends Component {
   async updateJson(editedDoc, docId) {
     const { storeData } = this.props; // to access store methods!
     console.log('storeData: ', storeData);
-    const arr = this.state.data;
+    const arr = storeData.data;
     let doc = '';
     arr.find((obj, i) => {
       if (obj._id === docId) {
@@ -146,8 +157,9 @@ class App extends Component {
     });
 
     try {
-      const syncgatewayUrl = this.state.syncgatewayUrl;
-      const selectedBucket = this.state.selectedBucket;
+      const syncgatewayUrl = manifest.syncgatewayUrl;
+      const selectedBucket = storeData.selected;
+      // const selectedBucket = storeData.selected;
       const params = {
         new_edits: true,
         rev: doc._rev,
@@ -174,7 +186,8 @@ class App extends Component {
 
   // remove doc
   async removeJson(docId) {
-    const arr = this.state.data;
+    const { storeData } = this.props;
+    const arr = storeData.data;
     let doc = '';
     arr.find((obj, i) => {
       if (obj._id === docId) {
@@ -187,8 +200,9 @@ class App extends Component {
     });
 
     try {
-      const syncgatewayUrl = this.state.syncgatewayUrl;
-      const selectedBucket = this.state.selectedBucket;
+      const syncgatewayUrl = manifest.syncgatewayUrl;
+      const selectedBucket = storeData.selected;
+      // const selectedBucket = storeData.selected;
       const res = await fetch(
         `${syncgatewayUrl}/${selectedBucket}/${doc._id}?rev=${doc._rev}`,
         {
@@ -206,51 +220,57 @@ class App extends Component {
     }
   }
 
-  bucketHandleChecked(event) {
-    const newState = this.state;
-    // newState.bucketDefaultKey = true;
-    newState.selectedBucket = event.target.value;
-    this.setState(newState, () => {
-      console.log('selectedBucket: ', this.state.selectedBucket);
-    });
+  async bucketHandleChecked(event) {
+    const { storeData } = this.props;
+    await this.props.selectBucket(event.target.value);
+    console.log('storeData in bucketSelected: ', storeData);
+    // this.setState({ bucketDefaultKey: true });
     this.getAllAvailableKeys();
   }
 
   //eslint-disable-next-line
-  handlePageClick = (data) => {
+  async handlePageClick(data) {
     const currentPage = data.selected + 1;
-    this.setState({ currentPage }, () => {
-      this.getChannelFeed();
-    });
-  };
+    await this.props.updateCurrentPage(currentPage);
+    this.getChannelFeed();
+  }
 
-  searchHandleChange(event) {
+  async searchHandleChange(event) {
     console.log('search clicked!');
-    this.setState({ searchValue: event.target.value });
+    const searchValue = event.target.value;
+    await this.props.searchDocument(searchValue);
+    // this.setState({ searchValue: event.target.value });
   }
 
   // search for doc by ID and return it if found
-  searchHandleSubmit(event) {
-    const newState = this.state;
-    const key = this.state.searchValue.trim(); // truncate spaces
-    const pos = this.state.allKeys.indexOf(key);
-    if (pos === -1) alert('Document id is not found!');
-    newState.foundID = key;
-    this.setState(newState);
-    this.searchDocPerId(pos);
-    event.preventDefault();
-  }
+  async searchHandleSubmit(event) {
+    const { storeData } = this.props;
+    // const newState = this.state;
+    // const key = this.state.searchValue.trim(); // truncate spaces
+    const foundID = storeData.searchValue.trim(); // truncate spaces
 
-  // update page number if doc is found
-  searchDocPerId(pos) {
-    const pageNum = Math.ceil(pos / this.state.rowsPerPage);
-    console.log('Key is found in pageNumber: ', pageNum);
-    this.setState({ currentPage: pageNum }, () => {
+    const pos = storeData.allKeys.indexOf(foundID);
+
+    if (pos !== -1) {
+      // newState.foundID = key;
+      // this.setState(newState);
+      this.props.foundId(foundID);
+
+      const rowsPerPage = manifest.rowsPerPage;
+      const currentPage = Math.ceil((pos + 1) / rowsPerPage);
+      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
+
+      await this.props.updateCurrentPage(currentPage);
+      console.log('Key is found in pageNumber: ', currentPage);
       this.getChannelFeed();
-    });
+      console.log('key exist!');
+    } else {
+      alert('Document id is not found!');
+    }
   }
 
   render() {
+    const { storeData } = this.props;
     return (
       <div>
         <div className="menuBar">
@@ -263,12 +283,10 @@ class App extends Component {
                 onChange={e => {
                   this.bucketHandleChecked(e);
                 }}
-                value={this.state.selectedBucket.value}
+                value={storeData.selected}
               >
-                <option key="default" disabled={this.state.bucketDefaultKey}>
-                  -- Select Buckets --
-                </option>
-                {this.state.bucket.map(m => (
+                <option key="default">-- Select Buckets --</option>
+                {manifest.bucket.map(m => (
                   <option key={m.toString()} value={m}>
                     {m}
                   </option>
@@ -283,7 +301,7 @@ class App extends Component {
                   type="text"
                   name="name"
                   placeholder="Document ID"
-                  value={this.state.searchValue}
+                  // value={this.props.storeData.searchValue}
                   onChange={this.searchHandleChange}
                 />
                 <input
@@ -302,7 +320,8 @@ class App extends Component {
             nextLabel={'next'}
             breakLabel={<a href="">...</a>}
             breakClassName={'break-me'}
-            pageCount={this.state.pageCount}
+            // pageCount={storeData ? storeData.pageCount : 0}
+            pageCount={storeData.pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={this.handlePageClick}
@@ -312,21 +331,23 @@ class App extends Component {
           />
         </div>
         <div>
-          {this.state.data.map(object => {
-            if (this.state.selectedBucket) {
-              return (
-                <Display
-                  key={object._id}
-                  index={object._id}
-                  prop={object}
-                  updateJson={this.updateJson}
-                  removeJson={this.removeJson}
-                  foundID={this.state.foundID}
-                />
-              );
-            }
-            return true;
-          })}
+          {storeData.data
+            ? storeData.data.map(object => {
+                if (storeData.selected) {
+                  return (
+                    <Display
+                      key={object._id}
+                      index={object._id}
+                      prop={object}
+                      updateJson={this.updateJson}
+                      removeJson={this.removeJson}
+                      foundID={storeData.foundID}
+                    />
+                  );
+                }
+                return true;
+              })
+            : null}
         </div>
       </div>
     );
@@ -342,10 +363,14 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  addAllKeys,
   saveDocument,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDataSuccess,
   loadDataFailed,
+  selectBucket,
+  updateCurrentPage,
+  updatePageCount,
+  searchDocument,
+  foundId,
 })(App);
