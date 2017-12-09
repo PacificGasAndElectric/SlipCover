@@ -23,7 +23,8 @@ class Display extends Component {
       index: PropTypes.string.isRequired,
       updateJson: PropTypes.func.isRequired,
       removeJson: PropTypes.func.isRequired,
-      foundID: PropTypes.string.isRequired,
+      //eslint-disable-next-line
+      foundID: PropTypes.string,
     };
   }
 

@@ -3,19 +3,16 @@ import React, { Component } from 'react';
 import * as queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js';
-// import Async from './Async';
+// import getAllAvailableKeysFunc from './getAllAvailableKeysFunc';
 import '../App.css';
 import {
-  saveDocument,
-  loadAllKeysSuccess,
-  loadAllKeysFailed,
-  loadDataSuccess,
-  loadDataFailed,
+  foundDocument,
   selectBucket,
+  loadAllKeysSuccess,
   updateCurrentPage,
   updatePageCount,
   searchDocument,
-  foundId,
+  loadDataSuccess,
 } from '../actions';
 import manifest from '../manifest.js';
 
@@ -50,17 +47,24 @@ class App extends Component {
   componentWillMount() {
     const { storeData } = this.props;
     const currentPage = 1;
-    if (!storeData.currentPage) {
+    if (!storeData.updateCurrentPage.currentPage) {
+      console.log('componentWillMount!');
       this.props.updateCurrentPage(currentPage);
     }
   }
 
   async getAllAvailableKeys() {
+    // getAllAvailableKeysFunc({
+    //   syncgatewayUrl: manifest.syncgatewayUrl,
+    //   selectedBucket: this.props.storeData.selectBucket.bucket,
+    //   queryString,
+    // });
+
     const { storeData } = this.props;
     console.log('storeData in keys: ', storeData);
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selected;
+      const selectedBucket = storeData.selectBucket.bucket;
       const params = {
         access: false,
         include_docs: false,
@@ -79,13 +83,13 @@ class App extends Component {
       if (!res.ok) throw Error("bad ID's fetch");
       const json = await res.json();
       const trueResult = json.rows.map(element => element.id);
+      this.props.loadAllKeysSuccess(trueResult);
 
       const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
       console.log('pageCount: ', pageCount);
       // this.props.updatePaging({ pageCount, currentPage: 1 }); // IXAK currentPage
       this.props.updatePageCount(pageCount);
 
-      this.props.loadAllKeysSuccess(trueResult);
       this.getChannelFeed();
 
       return Promise.resolve(trueResult);
@@ -98,20 +102,22 @@ class App extends Component {
 
   async getChannelFeed() {
     const { storeData } = this.props; // to access store methods!
-    console.log(` CURRENT PAGE: ${storeData.currentPage}`);
+    console.log(` CURRENT PAGE: ${storeData.updateCurrentPage.currentPage}`);
     const rowsPerPage = manifest.rowsPerPage;
-    const currentPage = storeData.currentPage;
+    const currentPage = storeData.updateCurrentPage.currentPage;
     const startIdx = (currentPage - 1) * rowsPerPage;
     const endIdx = currentPage * rowsPerPage;
 
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selected;
+      const selectedBucket = storeData.selectBucket.bucket;
 
       const params = {
         access: false,
         include_docs: true,
-        keys: JSON.stringify(storeData.allKeys.slice(startIdx, endIdx)),
+        keys: JSON.stringify(
+          storeData.loadAllKeysSuccess.allKeys.slice(startIdx, endIdx),
+        ),
       };
       const res = await fetch(
         `${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(
@@ -126,8 +132,8 @@ class App extends Component {
       );
       if (!res.ok) throw Error('bad data fetch');
       const json = await res.json();
-      this.props.loadDataSuccess(json);
       const trueResult = json.rows.map(element => element.doc);
+      this.props.loadDataSuccess(trueResult);
 
       // this.setState({ data: trueResult });
       return Promise.resolve(trueResult);
@@ -140,8 +146,8 @@ class App extends Component {
 
   async updateJson(editedDoc, docId) {
     const { storeData } = this.props; // to access store methods!
-    console.log('storeData: ', storeData);
-    const arr = storeData.data;
+    console.log('storeData in updateJson: ', storeData);
+    const arr = storeData.dataReducer.data;
     let doc = '';
     arr.find((obj, i) => {
       if (obj._id === docId) {
@@ -158,8 +164,8 @@ class App extends Component {
 
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selected;
-      // const selectedBucket = storeData.selected;
+      const selectedBucket = storeData.selectBucket.bucket;
+      // const selectedBucket = storeData.bucket;
       const params = {
         new_edits: true,
         rev: doc._rev,
@@ -187,7 +193,7 @@ class App extends Component {
   // remove doc
   async removeJson(docId) {
     const { storeData } = this.props;
-    const arr = storeData.data;
+    const arr = storeData.dataReducer.data;
     let doc = '';
     arr.find((obj, i) => {
       if (obj._id === docId) {
@@ -201,8 +207,8 @@ class App extends Component {
 
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selected;
-      // const selectedBucket = storeData.selected;
+      const selectedBucket = storeData.selectBucket.bucket;
+      // const selectedBucket = storeData.bucket;
       const res = await fetch(
         `${syncgatewayUrl}/${selectedBucket}/${doc._id}?rev=${doc._rev}`,
         {
@@ -222,6 +228,7 @@ class App extends Component {
 
   async bucketHandleChecked(event) {
     const { storeData } = this.props;
+    // const bucketDefaultKey = true;
     await this.props.selectBucket(event.target.value);
     console.log('storeData in bucketSelected: ', storeData);
     // this.setState({ bucketDefaultKey: true });
@@ -247,18 +254,19 @@ class App extends Component {
     const { storeData } = this.props;
     // const newState = this.state;
     // const key = this.state.searchValue.trim(); // truncate spaces
-    const foundID = storeData.searchValue.trim(); // truncate spaces
+    const id = storeData.searchDocument.searchValue.trim(); // truncate spaces
 
-    const pos = storeData.allKeys.indexOf(foundID);
+    const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
 
     if (pos !== -1) {
       // newState.foundID = key;
       // this.setState(newState);
-      this.props.foundId(foundID);
+      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
+
+      await this.props.foundDocument(id);
 
       const rowsPerPage = manifest.rowsPerPage;
       const currentPage = Math.ceil((pos + 1) / rowsPerPage);
-      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
 
       await this.props.updateCurrentPage(currentPage);
       console.log('Key is found in pageNumber: ', currentPage);
@@ -266,6 +274,7 @@ class App extends Component {
       console.log('key exist!');
     } else {
       alert('Document id is not found!');
+      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
     }
   }
 
@@ -274,7 +283,7 @@ class App extends Component {
     return (
       <div>
         <div className="menuBar">
-          <h1 className="header"> Sync-Gateway-Cushion Open Source </h1>
+          <h1 className="header"> Sync-Gateway-SlipCover Open Source </h1>
           <div className="menuRow">
             {/* Buckets dropdown menu */}
             <div className="bucket-box">
@@ -283,9 +292,16 @@ class App extends Component {
                 onChange={e => {
                   this.bucketHandleChecked(e);
                 }}
-                value={storeData.selected}
+                value={storeData.selectBucket.bucket}
               >
-                <option key="default">-- Select Buckets --</option>
+                <option
+                // key="default"
+                // disabled={
+                //   this.props.storeData.selectedBucket.bucketDefaultKey
+                // }
+                >
+                  -- Select Buckets --
+                </option>
                 {manifest.bucket.map(m => (
                   <option key={m.toString()} value={m}>
                     {m}
@@ -321,7 +337,7 @@ class App extends Component {
             breakLabel={<a href="">...</a>}
             breakClassName={'break-me'}
             // pageCount={storeData ? storeData.pageCount : 0}
-            pageCount={storeData.pageCount}
+            pageCount={storeData.updatePageCount.pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={this.handlePageClick}
@@ -331,9 +347,9 @@ class App extends Component {
           />
         </div>
         <div>
-          {storeData.data
-            ? storeData.data.map(object => {
-                if (storeData.selected) {
+          {storeData.dataReducer.data
+            ? storeData.dataReducer.data.map(object => {
+                if (storeData.selectBucket.bucket) {
                   return (
                     <Display
                       key={object._id}
@@ -341,7 +357,7 @@ class App extends Component {
                       prop={object}
                       updateJson={this.updateJson}
                       removeJson={this.removeJson}
-                      foundID={storeData.foundID}
+                      foundID={storeData.foundDocument.id}
                     />
                   );
                 }
@@ -363,14 +379,11 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, {
-  saveDocument,
-  loadAllKeysSuccess,
-  loadAllKeysFailed,
-  loadDataSuccess,
-  loadDataFailed,
+  foundDocument,
   selectBucket,
+  loadAllKeysSuccess,
   updateCurrentPage,
   updatePageCount,
   searchDocument,
-  foundId,
+  loadDataSuccess,
 })(App);

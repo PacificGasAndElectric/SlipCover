@@ -4,14 +4,12 @@ import {
   SAVE_DOCUMENT,
   REMOVE_DOCUMENT,
   LOAD_ALLKEYS_SUCCESS,
-  LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
-  LOAD_DATA_FAILED,
   SELECT_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
-  FOUND_ID,
+  FOUND_DOCUMENT,
 } from '../constants';
 
 export const loadAllKeysSuccess = allKeys => ({
@@ -28,24 +26,14 @@ export const saveDocument = (id, newDoc, oldDoc) => ({
 
 export const removeDocument = id => ({ type: REMOVE_DOCUMENT, id });
 
-export const loadDataSuccess = dataResponse => ({
+export const loadDataSuccess = rows => ({
   type: LOAD_DATA_SUCCESS,
-  dataResponse,
+  rows,
 });
 
-export const loadAllKeysFailed = error => ({
-  type: LOAD_ALLKEYS_FAILED,
-  error,
-});
-
-export const loadDataFailed = error => ({
-  type: LOAD_DATA_FAILED,
-  error,
-});
-
-export const selectBucket = selected => ({
+export const selectBucket = bucket => ({
   type: SELECT_BUCKET,
-  selected,
+  bucket,
 });
 
 export const updateCurrentPage = currentPage => ({
@@ -63,7 +51,7 @@ export const searchDocument = searchValue => ({
   searchValue,
 });
 
-export const foundId = foundID => ({
-  type: FOUND_ID,
-  foundID,
+export const foundDocument = id => ({
+  type: FOUND_DOCUMENT,
+  id,
 });

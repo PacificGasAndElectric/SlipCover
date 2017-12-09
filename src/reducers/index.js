@@ -1,94 +1,137 @@
 // Reducers - extract the Redux logic for the store into functions that handle actions and return pieces of the state.
-// import { combineReducers } from 'redux';
+/* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
+import { combineReducers } from 'redux';
 
 import {
   SAVE_DOCUMENT,
   REMOVE_DOCUMENT,
   LOAD_ALLKEYS_SUCCESS,
-  LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
-  LOAD_DATA_FAILED,
   SELECT_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
-  FOUND_ID,
+  FOUND_DOCUMENT,
 } from '../constants';
 
-// TODO: refactor as a separate message reducer with css
-const loadAllKeysFailed = (state = [], action) => {
-  const { error } = action;
-  return {
-    error,
-  };
-};
-
-const loadDataFailed = (state = [], action) => {
-  const { error } = action;
-  return {
-    error,
-  };
-};
-
-// const foundID = (state = '', { type, foundId }) => {
-//   switch (type) {
-//     case FOUND_ID:
-//       return foundId;
-//     default: {
-//       return state;
-//     }
-//   }
-// };
-//
-// const selectBucket = (state = [], { type, selected }) => {
-//   switch (type) {
-//     case SELECT_BUCKET:
-//       return { ...state, selected };
-//     default: {
-//       return state;
-//     }
-//   }
-// };
-
-const reducer = (state = [], action) => {
-  let reducers = null;
-  switch (action.type) {
-    case SAVE_DOCUMENT:
+const foundDocument = (state = '', { type, id }) => {
+  switch (type) {
+    case FOUND_DOCUMENT:
       return {
         ...state,
-        data: state.data.map(n => (n.id === action.id ? action.newDoc : n)),
-      };
-    case REMOVE_DOCUMENT:
-      return { ...state, data: state.data.filter(ele => ele.id !== action.id) };
-    case LOAD_ALLKEYS_SUCCESS:
-      return { ...state, allKeys: action.allKeys };
-    case LOAD_DATA_SUCCESS:
-      return { ...state, data: action.dataResponse.rows.map(n => n.doc) };
-    case LOAD_ALLKEYS_FAILED:
-      reducers = [...state, loadAllKeysFailed(state, action)];
-      return reducers;
-    case LOAD_DATA_FAILED:
-      reducers = [...state, loadDataFailed(state, action)];
-      return reducers;
-    case SELECT_BUCKET:
-      return { ...state, selected: action.selected };
-    case UPDATE_CURRENT_PAGE:
-      return { ...state, currentPage: action.currentPage };
-    case UPDATE_PAGE_COUNT:
-      return { ...state, pageCount: action.pageCount };
-    case SEARCH_DOCUMENT:
-      return {
-        ...state,
-        searchValue: action.searchValue,
-      };
-    case FOUND_ID:
-      return {
-        ...state,
-        foundID: action.foundID,
+        id,
       };
     default:
       return state;
   }
 };
-export default reducer;
-// export default combineReducers({ reducer, foundID, selectBucket });
+
+const selectBucket = (state = [], { type, bucket }) => {
+  switch (type) {
+    case SELECT_BUCKET:
+      return { ...state, bucket };
+    default:
+      return state;
+  }
+};
+
+// const saveDocument = (state = [], action) => {
+//   switch (action.type) {
+//     case SAVE_DOCUMENT:
+//       return {
+//         ...state,
+//         data: state.data.map(n => (n.id === action.id ? action.newDoc : n)),
+//       };
+//     default:
+//       return state;
+//   }
+// };
+//
+// const removeDocument = (state = [], action) => {
+//   switch (action.type) {
+//     case REMOVE_DOCUMENT:
+//       return { ...state, data: state.data.filter(ele => ele.id !== action.id) };
+//     default:
+//       return state;
+//   }
+// };
+
+const loadAllKeysSuccess = (state = [], action) => {
+  switch (action.type) {
+    case LOAD_ALLKEYS_SUCCESS:
+      return { ...state, allKeys: action.allKeys };
+    default:
+      return state;
+  }
+};
+
+// const loadDataSuccess = (state = [], action) => {
+//   switch (action.type) {
+//     case LOAD_DATA_SUCCESS:
+//       return { ...state, data: action.rows };
+//     default:
+//       return state;
+//   }
+// };
+
+const updateCurrentPage = (state = [], action) => {
+  switch (action.type) {
+    case UPDATE_CURRENT_PAGE:
+      return { ...state, currentPage: action.currentPage };
+    default:
+      return state;
+  }
+};
+
+const updatePageCount = (state = [], action) => {
+  switch (action.type) {
+    case UPDATE_PAGE_COUNT:
+      return { ...state, pageCount: action.pageCount };
+    default:
+      return state;
+  }
+};
+
+const searchDocument = (state = [], action) => {
+  switch (action.type) {
+    case SEARCH_DOCUMENT:
+      return {
+        ...state,
+        searchValue: action.searchValue,
+      };
+    default:
+      return state;
+  }
+};
+
+const dataReducer = (state = [], action) => {
+  switch (action.type) {
+    case LOAD_DATA_SUCCESS:
+      return { ...state, data: action.rows };
+    case SAVE_DOCUMENT:
+      return {
+        ...state,
+        data: state.data.map(
+          ele => (ele._id === action.id ? action.newDoc : ele),
+        ),
+      };
+    case REMOVE_DOCUMENT:
+      return {
+        ...state,
+        data: state.data.filter(ele => ele._id !== action.id),
+      };
+
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  foundDocument,
+  selectBucket,
+  loadAllKeysSuccess,
+  updateCurrentPage,
+  updatePageCount,
+  searchDocument,
+  dataReducer,
+});
