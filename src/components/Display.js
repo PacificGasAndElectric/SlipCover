@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { saveDocument, removeDocument } from '../actions';
+import {
+  saveDocument,
+  removeDocument,
+  updateStatus,
+  updateSaveButton,
+} from '../actions';
 
 const fileDownload = require('react-file-download');
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
-
-const IsJsonString = str => {
-  try {
-    JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-};
 
 class Display extends Component {
   static get propTypes() {
@@ -30,119 +26,54 @@ class Display extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      status: false,
-    };
     this.editBtn = this.editBtn.bind(this);
     this.saveBtn = this.saveBtn.bind(this);
     this.cancelBtn = this.cancelBtn.bind(this);
-    this.noSubmit = this.noSubmit.bind(this);
-    this.yesSubmit = this.yesSubmit.bind(this);
     this.download = this.download.bind(this);
+    this.removeBtn = this.removeBtn.bind(this);
   }
 
-  editBtn() {
-    this.setState({ status: true });
+  editBtn(id) {
+    const status = true;
+    this.props.updateStatus(status, id);
   }
 
-  cancelBtn() {
-    this.setState({ status: false, confirm: false });
+  cancelBtn(id) {
+    const status = false;
+    this.props.updateStatus(status, id);
   }
 
-  saveBtn() {
-    const jsonStatus = IsJsonString(this.refs.newText.value);
-    if (jsonStatus) {
-      this.setState({ confirm: true });
-      this.submit();
-    } else {
-      alert('This is NOT accepable JSON format!');
-    }
+  async saveBtn(id) {
+    const status = false;
+    const newDoc = JSON.parse(this.refs.newText.value);
+    const oldDoc = this.props.prop;
+    await this.props.updateSaveButton(status, id);
+    await this.props.saveDocument(id, newDoc, oldDoc);
+    await this.props.updateJson(newDoc, id);
   }
 
-  async removeBtn() {
-    await this.props.removeJson(this.props.index);
-    await this.props.removeDocument(this.props.index);
-    this.setState({ status: false, confirm: false });
-  }
+  async removeBtn(id) {
+    await this.props.removeJson(id);
+    await this.props.removeDocument(id);
 
-  submit() {
-    if (this.state.confirm === true) {
-      return (
-        <div id="id_confrmdiv">
-          Do you want to write the changes to Sync-gateway?
-          <button id="id_truebtn" onClick={this.yesSubmit}>
-            Yes
-          </button>
-          <button id="id_falsebtn" onClick={this.noSubmit}>
-            No
-          </button>
-        </div>
-      );
-    }
-    return false;
-  }
-
-  async yesSubmit() {
-    console.log('yes submit with id: ', this.props.index);
-    const newState = this.state;
-    await this.props.saveDocument(
-      this.props.index,
-      JSON.parse(this.refs.newText.value),
-      this.props.prop,
-    );
-    await this.props.updateJson(this.refs.newText.value, this.props.index);
-    newState.status = false;
-    this.setState(newState);
-  }
-
-  noSubmit() {
-    console.log('no submit clicked');
-    this.viewerForm();
-    const newState = this.state;
-    newState.state = false;
-    newState.confirm = false;
-    newState.status = false;
-    this.setState(newState);
+    // this.setState({ status: false, confirm: false });
   }
 
   download() {
     fileDownload(JSON.stringify(this.props.prop, null, 2), 'filename.json');
   }
 
-  viewerForm() {
-    let viewerForm = '';
-    const doc = this.props.prop;
-    if (this.state.confirm) {
-      // readOnly
-      viewerForm = (
-        <textarea
-          readOnly
-          ref="newText"
-          id="enableTextArea"
-          defaultValue={JSON.stringify(doc, null, 2)}
-        />
-      );
-    } else {
-      viewerForm = (
-        <textarea
-          ref="newText"
-          id="enableTextArea"
-          defaultValue={JSON.stringify(doc, null, 2)}
-        />
-      );
-    }
-    return viewerForm;
-  }
-
   renderNormal() {
+    const id = this.props.prop._id;
+    console.log('in renderNormal: ', id);
     return (
       <div className="editBtnJsonList">
-        {this.props.foundID === this.props.prop._id ? (
-          <pre id="highlightID">{`id: ${this.props.prop._id}`}</pre>
+        {this.props.foundID === id ? (
+          <pre id="highlightID">{`id: ${id}`}</pre>
         ) : (
-          <pre>{`id: ${this.props.prop._id}`}</pre>
+          <pre>{`id: ${id}`}</pre>
         )}
-        <button onClick={this.editBtn} className="edit-button">
+        <button onClick={() => this.editBtn(id)} className="edit-button">
           Edit
         </button>
       </div>
@@ -150,17 +81,22 @@ class Display extends Component {
   }
 
   renderForm() {
+    const id = this.props.prop._id;
+    console.log('in renderForm: ', id);
     return (
       <div className="editBtnJsonList">
-        {this.viewerForm()}
-        <button onClick={() => this.saveBtn()} className="save-button">
+        <textarea
+          ref="newText"
+          id="enableTextArea"
+          defaultValue={JSON.stringify(this.props.prop, null, 2)}
+        />
+        <button onClick={() => this.saveBtn(id)} className="save-button">
           Save
         </button>
-        {this.submit()}
-        <button onClick={this.cancelBtn} className="cancel-button">
+        <button onClick={() => this.cancelBtn(id)} className="cancel-button">
           Cancel
         </button>
-        <button onClick={() => this.removeBtn()} className="remove-button">
+        <button onClick={() => this.removeBtn(id)} className="remove-button">
           Remove
         </button>
         <a>
@@ -173,8 +109,12 @@ class Display extends Component {
   }
 
   render() {
-    if (this.state.status) {
-      return this.renderForm();
+    console.log('updateStatus in render: ', this.props.storeData.dataReducer);
+
+    if (this.props.storeData.dataReducer.status === true) {
+      if (this.props.index === this.props.storeData.dataReducer.id) {
+        return this.renderForm();
+      }
     }
     return this.renderNormal();
   }
@@ -189,6 +129,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { saveDocument, removeDocument })(
-  Display,
-);
+export default connect(mapStateToProps, {
+  saveDocument,
+  removeDocument,
+  updateStatus,
+  updateSaveButton,
+})(Display);

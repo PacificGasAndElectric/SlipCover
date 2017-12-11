@@ -10,6 +10,8 @@ import {
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
   FOUND_DOCUMENT,
+  UPDATE_STATUS,
+  UPDATE_SAVE_BUTTON,
 } from '../constants';
 
 export const loadAllKeysSuccess = allKeys => ({
@@ -53,5 +55,17 @@ export const searchDocument = searchValue => ({
 
 export const foundDocument = id => ({
   type: FOUND_DOCUMENT,
+  id,
+});
+
+export const updateStatus = (status, id) => ({
+  type: UPDATE_STATUS,
+  status,
+  id,
+});
+
+export const updateSaveButton = (status, id) => ({
+  type: UPDATE_SAVE_BUTTON,
+  status,
   id,
 });

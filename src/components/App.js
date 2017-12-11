@@ -13,6 +13,8 @@ import {
   updatePageCount,
   searchDocument,
   loadDataSuccess,
+  updateStatus,
+  updateSaveButton,
 } from '../actions';
 import manifest from '../manifest.js';
 
@@ -20,20 +22,6 @@ import manifest from '../manifest.js';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      // data: [],
-      // allKeys: [],
-      // currentPage: 1,
-      // rowsPerPage: 25,
-      // pageCount: 0,
-      // value: '',
-      // searchValue: '',
-      // foundID: '',
-      // bucket: ['beer-sample'],
-      // syncgatewayUrl: 'http://localhost:4984',
-      // selectedBucket: '',
-      // bucketDefaultKey: false,
-    };
     this.updateJson = this.updateJson.bind(this);
     this.removeJson = this.removeJson.bind(this);
     this.getChannelFeed = this.getChannelFeed.bind(this);
@@ -47,6 +35,9 @@ class App extends Component {
   componentWillMount() {
     const { storeData } = this.props;
     const currentPage = 1;
+    const status = false;
+    this.props.updateStatus(status);
+    this.props.updateSaveButton(status);
     if (!storeData.updateCurrentPage.currentPage) {
       console.log('componentWillMount!');
       this.props.updateCurrentPage(currentPage);
@@ -58,10 +49,11 @@ class App extends Component {
     //   syncgatewayUrl: manifest.syncgatewayUrl,
     //   selectedBucket: this.props.storeData.selectBucket.bucket,
     //   queryString,
+    //   rowsPerPage: manifest.rowsPerPage,
     // });
 
     const { storeData } = this.props;
-    console.log('storeData in keys: ', storeData);
+    // console.log('storeData in keys: ', storeData);
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
       const selectedBucket = storeData.selectBucket.bucket;
@@ -87,15 +79,12 @@ class App extends Component {
 
       const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
       console.log('pageCount: ', pageCount);
-      // this.props.updatePaging({ pageCount, currentPage: 1 }); // IXAK currentPage
       this.props.updatePageCount(pageCount);
-
       this.getChannelFeed();
 
       return Promise.resolve(trueResult);
     } catch (err) {
       console.log(err);
-      // this.props.loadAllKeysFailed(err);
     }
     return true;
   }
@@ -135,11 +124,9 @@ class App extends Component {
       const trueResult = json.rows.map(element => element.doc);
       this.props.loadDataSuccess(trueResult);
 
-      // this.setState({ data: trueResult });
       return Promise.resolve(trueResult);
     } catch (err) {
       console.log(err);
-      // this.props.loadDataFailed(err);
     }
     return true;
   }
@@ -151,7 +138,7 @@ class App extends Component {
     let doc = '';
     arr.find((obj, i) => {
       if (obj._id === docId) {
-        arr[i] = JSON.parse(editedDoc);
+        arr[i] = editedDoc;
         arr[i]._id = obj._id; // if user try to chnage doc _id
         arr[i]._rev = obj._rev; // if user try to chnage doc _rev
         arr[i].name = 'Ibrahim';
@@ -165,7 +152,6 @@ class App extends Component {
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
       const selectedBucket = storeData.selectBucket.bucket;
-      // const selectedBucket = storeData.bucket;
       const params = {
         new_edits: true,
         rev: doc._rev,
@@ -208,7 +194,6 @@ class App extends Component {
     try {
       const syncgatewayUrl = manifest.syncgatewayUrl;
       const selectedBucket = storeData.selectBucket.bucket;
-      // const selectedBucket = storeData.bucket;
       const res = await fetch(
         `${syncgatewayUrl}/${selectedBucket}/${doc._id}?rev=${doc._rev}`,
         {
@@ -227,11 +212,10 @@ class App extends Component {
   }
 
   async bucketHandleChecked(event) {
-    const { storeData } = this.props;
+    // const { storeData } = this.props;
     // const bucketDefaultKey = true;
     await this.props.selectBucket(event.target.value);
-    console.log('storeData in bucketSelected: ', storeData);
-    // this.setState({ bucketDefaultKey: true });
+    // console.log('storeData in bucketSelected: ', storeData);
     this.getAllAvailableKeys();
   }
 
@@ -246,35 +230,26 @@ class App extends Component {
     console.log('search clicked!');
     const searchValue = event.target.value;
     await this.props.searchDocument(searchValue);
-    // this.setState({ searchValue: event.target.value });
   }
 
   // search for doc by ID and return it if found
   async searchHandleSubmit(event) {
     const { storeData } = this.props;
-    // const newState = this.state;
-    // const key = this.state.searchValue.trim(); // truncate spaces
     const id = storeData.searchDocument.searchValue.trim(); // truncate spaces
-
     const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
-
     if (pos !== -1) {
-      // newState.foundID = key;
-      // this.setState(newState);
       event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
 
       await this.props.foundDocument(id);
-
       const rowsPerPage = manifest.rowsPerPage;
       const currentPage = Math.ceil((pos + 1) / rowsPerPage);
 
       await this.props.updateCurrentPage(currentPage);
       console.log('Key is found in pageNumber: ', currentPage);
       this.getChannelFeed();
-      console.log('key exist!');
     } else {
       alert('Document id is not found!');
-      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
+      event.preventDefault();
     }
   }
 
@@ -317,7 +292,6 @@ class App extends Component {
                   type="text"
                   name="name"
                   placeholder="Document ID"
-                  // value={this.props.storeData.searchValue}
                   onChange={this.searchHandleChange}
                 />
                 <input
@@ -336,7 +310,6 @@ class App extends Component {
             nextLabel={'next'}
             breakLabel={<a href="">...</a>}
             breakClassName={'break-me'}
-            // pageCount={storeData ? storeData.pageCount : 0}
             pageCount={storeData.updatePageCount.pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
@@ -347,9 +320,10 @@ class App extends Component {
           />
         </div>
         <div>
-          {storeData.dataReducer.data
+          {storeData.dataReducer && storeData.dataReducer.data
             ? storeData.dataReducer.data.map(object => {
                 if (storeData.selectBucket.bucket) {
+                  console.log('in Display');
                   return (
                     <Display
                       key={object._id}
@@ -363,7 +337,7 @@ class App extends Component {
                 }
                 return true;
               })
-            : null}
+            : console.log('NOT in Display')}
         </div>
       </div>
     );
@@ -372,7 +346,6 @@ class App extends Component {
 
 // allows reducers in the redux store to become accessible within React Components through this.props.
 function mapStateToProps(state) {
-  // console.log('state in mapStateToProps: ', state);
   return {
     storeData: state,
   };
@@ -386,4 +359,6 @@ export default connect(mapStateToProps, {
   updatePageCount,
   searchDocument,
   loadDataSuccess,
+  updateStatus,
+  updateSaveButton,
 })(App);

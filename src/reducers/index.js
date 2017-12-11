@@ -12,6 +12,8 @@ import {
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
   FOUND_DOCUMENT,
+  UPDATE_STATUS,
+  UPDATE_SAVE_BUTTON,
 } from '../constants';
 
 const foundDocument = (state = '', { type, id }) => {
@@ -35,27 +37,6 @@ const selectBucket = (state = [], { type, bucket }) => {
   }
 };
 
-// const saveDocument = (state = [], action) => {
-//   switch (action.type) {
-//     case SAVE_DOCUMENT:
-//       return {
-//         ...state,
-//         data: state.data.map(n => (n.id === action.id ? action.newDoc : n)),
-//       };
-//     default:
-//       return state;
-//   }
-// };
-//
-// const removeDocument = (state = [], action) => {
-//   switch (action.type) {
-//     case REMOVE_DOCUMENT:
-//       return { ...state, data: state.data.filter(ele => ele.id !== action.id) };
-//     default:
-//       return state;
-//   }
-// };
-
 const loadAllKeysSuccess = (state = [], action) => {
   switch (action.type) {
     case LOAD_ALLKEYS_SUCCESS:
@@ -64,15 +45,6 @@ const loadAllKeysSuccess = (state = [], action) => {
       return state;
   }
 };
-
-// const loadDataSuccess = (state = [], action) => {
-//   switch (action.type) {
-//     case LOAD_DATA_SUCCESS:
-//       return { ...state, data: action.rows };
-//     default:
-//       return state;
-//   }
-// };
 
 const updateCurrentPage = (state = [], action) => {
   switch (action.type) {
@@ -105,6 +77,7 @@ const searchDocument = (state = [], action) => {
 };
 
 const dataReducer = (state = [], action) => {
+  console.log('state in dataReducer: ', state);
   switch (action.type) {
     case LOAD_DATA_SUCCESS:
       return { ...state, data: action.rows };
@@ -120,7 +93,18 @@ const dataReducer = (state = [], action) => {
         ...state,
         data: state.data.filter(ele => ele._id !== action.id),
       };
-
+    case UPDATE_STATUS:
+      return {
+        ...state,
+        id: action.id,
+        status: action.status,
+        // status: state.data.indexOf(action.id) ? action.status : !action.status,
+        // status: state.data.map(
+        //   ele => (ele._id === action.id ? action.status : !action.status),
+        // ),
+      };
+    case UPDATE_SAVE_BUTTON:
+      return { ...state, id: action.id, status: action.status };
     default:
       return state;
   }

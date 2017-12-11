@@ -6,7 +6,7 @@ const manifest = {
   logLevel: 'DEBUG',
   syncgatewayUrl: process.env.REACT_APP_SYNC_GATEWAY,
   bucket: ['beer-sample'],
-  rowsPerPage: 25,
+  rowsPerPage: 3,
 };
 
 module.exports = manifest;
