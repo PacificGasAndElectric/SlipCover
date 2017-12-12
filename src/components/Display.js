@@ -6,7 +6,9 @@ import {
   removeDocument,
   updateStatus,
   updateSaveButton,
+  selectBucket,
 } from '../actions';
+import updateJson from './updateJson';
 
 const fileDownload = require('react-file-download');
 
@@ -26,7 +28,6 @@ class Display extends Component {
     return {
       prop: PropTypes.object.isRequired,
       index: PropTypes.string.isRequired,
-      updateJson: PropTypes.func.isRequired,
       removeJson: PropTypes.func.isRequired,
       //eslint-disable-next-line
       foundID: PropTypes.string,
@@ -40,6 +41,7 @@ class Display extends Component {
     this.cancelBtn = this.cancelBtn.bind(this);
     this.download = this.download.bind(this);
     this.removeBtn = this.removeBtn.bind(this);
+    this.updateDocument = this.updateDocument.bind(this);
   }
 
   editBtn(id) {
@@ -52,6 +54,15 @@ class Display extends Component {
     this.props.updateStatus(status, id);
   }
 
+  async updateDocument(editedDoc, docId) {
+    await updateJson(
+      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.dataReducer.data,
+      editedDoc,
+      docId,
+    );
+  }
+
   async saveBtn(id) {
     const status = false;
     const isJSON = IsJsonString(this.refs.newText.value);
@@ -62,7 +73,7 @@ class Display extends Component {
 
       await this.props.updateSaveButton(status, id);
       await this.props.saveDocument(id, newDoc, oldDoc); // IXAK check promise.all
-      await this.props.updateJson(newDoc, id);
+      await this.updateDocument(newDoc, id);
     } else {
       alert('This is NOT accepable JSON format!');
     }
@@ -71,8 +82,6 @@ class Display extends Component {
   async removeBtn(id) {
     await this.props.removeJson(id);
     await this.props.removeDocument(id);
-
-    // this.setState({ status: false, confirm: false });
   }
 
   download() {
@@ -143,4 +152,5 @@ export default connect(mapStateToProps, {
   removeDocument,
   updateStatus,
   updateSaveButton,
+  selectBucket,
 })(Display);

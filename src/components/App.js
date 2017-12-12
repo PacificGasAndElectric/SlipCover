@@ -1,15 +1,13 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
 
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import LinearProgress from 'material-ui/LinearProgress';
-import * as queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js';
-
 import getAllAvailableKeys from './getAllAvailableKeys';
 import getChannelFeed from './getChannelFeed';
+import removeJson from './removeJson';
 
 import '../App.css';
 import {
@@ -29,7 +27,6 @@ import manifest from '../manifest.js';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.updateJson = this.updateJson.bind(this);
     this.removeJson = this.removeJson.bind(this);
     this.getChannelFeed = this.getChannelFeed.bind(this);
     this.getAllAvailableKeys = this.getAllAvailableKeys.bind(this);
@@ -46,7 +43,6 @@ class App extends Component {
     this.props.updateStatus(status);
     this.props.updateSaveButton(status);
     if (!storeData.updateCurrentPage.currentPage) {
-      console.log('componentWillMount!');
       this.props.updateCurrentPage(currentPage);
     }
   }
@@ -71,84 +67,14 @@ class App extends Component {
     this.props.loadDataSuccess(trueResult);
   }
 
-  async updateJson(editedDoc, docId) {
-    const { storeData } = this.props; // to access store methods!
-    console.log('storeData in updateJson: ', storeData);
-    const arr = storeData.dataReducer.data;
-    let doc = '';
-    arr.find((obj, i) => {
-      if (obj._id === docId) {
-        arr[i] = editedDoc;
-        arr[i]._id = obj._id; // if user try to chnage doc _id
-        arr[i]._rev = obj._rev; // if user try to chnage doc _rev
-        arr[i].name = 'Ibrahim';
-        arr[i].updated = new Date().toJSON();
-        doc = arr[i];
-        return true; // stop searching
-      }
-      return false;
-    });
-
-    try {
-      const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selectBucket.bucket;
-      const params = {
-        new_edits: true,
-        rev: doc._rev,
-      };
-      const res = await fetch(
-        `${syncgatewayUrl}/${selectedBucket}/${doc._id}?${queryString.stringify(
-          params,
-        )}`,
-        {
-          method: 'PUT',
-          headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(doc),
-        },
-      );
-      if (!res.ok) throw Error('bad data fetch');
-      this.getChannelFeed();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   // remove doc
   async removeJson(docId) {
-    const { storeData } = this.props;
-    const arr = storeData.dataReducer.data;
-    let doc = '';
-    arr.find((obj, i) => {
-      if (obj._id === docId) {
-        arr[i]._id = obj._id; // if user try to chnage doc _id
-        arr[i]._rev = obj._rev; // if user try to chnage doc _rev
-        doc = arr[i];
-        return true; // stop searching
-      }
-      return false;
-    });
-
-    try {
-      const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selectBucket.bucket;
-      const res = await fetch(
-        `${syncgatewayUrl}/${selectedBucket}/${doc._id}?rev=${doc._rev}`,
-        {
-          method: 'DELETE',
-          headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      if (!res.ok) throw Error('bad data fetch'); // IXAK handle errors
-      this.getAllAvailableKeys();
-    } catch (err) {
-      console.log(err);
-    }
+    await removeJson(
+      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.dataReducer.data,
+      docId,
+    );
+    this.getAllAvailableKeys();
   }
 
   async bucketHandleChecked(event) {
@@ -278,7 +204,6 @@ class App extends Component {
                       key={object._id}
                       index={object._id}
                       prop={object}
-                      updateJson={this.updateJson}
                       removeJson={this.removeJson}
                       foundID={storeData.foundDocument.id}
                     />
@@ -300,32 +225,14 @@ function mapStateToProps(state) {
   };
 }
 
-// export default connect(mapStateToProps, {
-//   foundDocument,
-//   selectBucket,
-//   loadAllKeysSuccess,
-//   updateCurrentPage,
-//   updatePageCount,
-//   searchDocument,
-//   loadDataSuccess,
-//   updateStatus,
-//   updateSaveButton,
-// })(App);
-
-export default connect(mapStateToProps, dispatch =>
-  bindActionCreators(
-    {
-      foundDocument,
-      selectBucket,
-      loadAllKeysSuccess,
-      updateCurrentPage,
-      updatePageCount,
-      searchDocument,
-      loadDataSuccess,
-      updateStatus,
-      updateSaveButton,
-      getAllAvailableKeys,
-    },
-    dispatch,
-  ),
-)(App);
+export default connect(mapStateToProps, {
+  foundDocument,
+  selectBucket,
+  loadAllKeysSuccess,
+  updateCurrentPage,
+  updatePageCount,
+  searchDocument,
+  loadDataSuccess,
+  updateStatus,
+  updateSaveButton,
+})(App);
