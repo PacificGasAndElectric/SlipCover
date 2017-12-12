@@ -77,7 +77,6 @@ const searchDocument = (state = [], action) => {
 };
 
 const dataReducer = (state = [], action) => {
-  console.log('state in dataReducer: ', state);
   switch (action.type) {
     case LOAD_DATA_SUCCESS:
       return { ...state, data: action.rows };

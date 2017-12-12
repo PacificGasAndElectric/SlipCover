@@ -12,6 +12,15 @@ const fileDownload = require('react-file-download');
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
 
+const IsJsonString = str => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};
+
 class Display extends Component {
   static get propTypes() {
     return {
@@ -45,11 +54,18 @@ class Display extends Component {
 
   async saveBtn(id) {
     const status = false;
-    const newDoc = JSON.parse(this.refs.newText.value);
-    const oldDoc = this.props.prop;
-    await this.props.updateSaveButton(status, id);
-    await this.props.saveDocument(id, newDoc, oldDoc);
-    await this.props.updateJson(newDoc, id);
+    const isJSON = IsJsonString(this.refs.newText.value);
+
+    if (isJSON) {
+      const newDoc = JSON.parse(this.refs.newText.value);
+      const oldDoc = this.props.prop;
+
+      await this.props.updateSaveButton(status, id);
+      await this.props.saveDocument(id, newDoc, oldDoc); // IXAK check promise.all
+      await this.props.updateJson(newDoc, id);
+    } else {
+      alert('This is NOT accepable JSON format!');
+    }
   }
 
   async removeBtn(id) {
@@ -65,7 +81,6 @@ class Display extends Component {
 
   renderNormal() {
     const id = this.props.prop._id;
-    console.log('in renderNormal: ', id);
     return (
       <div className="editBtnJsonList">
         {this.props.foundID === id ? (
@@ -82,7 +97,6 @@ class Display extends Component {
 
   renderForm() {
     const id = this.props.prop._id;
-    console.log('in renderForm: ', id);
     return (
       <div className="editBtnJsonList">
         <textarea
@@ -109,8 +123,6 @@ class Display extends Component {
   }
 
   render() {
-    console.log('updateStatus in render: ', this.props.storeData.dataReducer);
-
     if (this.props.storeData.dataReducer.status === true) {
       if (this.props.index === this.props.storeData.dataReducer.id) {
         return this.renderForm();
@@ -120,10 +132,7 @@ class Display extends Component {
   }
 }
 
-// allows reducers in the redux store to become accessible within React Components through this.props.
-// look at "renderReminder()"
 function mapStateToProps(state) {
-  // console.log('state in mapStateToProps: ', state);
   return {
     storeData: state,
   };

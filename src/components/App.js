@@ -1,9 +1,16 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import LinearProgress from 'material-ui/LinearProgress';
 import * as queryString from 'query-string';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js';
-// import getAllAvailableKeysFunc from './getAllAvailableKeysFunc';
+
+import getAllAvailableKeys from './getAllAvailableKeys';
+import getChannelFeed from './getChannelFeed';
+
 import '../App.css';
 import {
   foundDocument,
@@ -45,90 +52,23 @@ class App extends Component {
   }
 
   async getAllAvailableKeys() {
-    // getAllAvailableKeysFunc({
-    //   syncgatewayUrl: manifest.syncgatewayUrl,
-    //   selectedBucket: this.props.storeData.selectBucket.bucket,
-    //   queryString,
-    //   rowsPerPage: manifest.rowsPerPage,
-    // });
-
-    const { storeData } = this.props;
-    // console.log('storeData in keys: ', storeData);
-    try {
-      const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selectBucket.bucket;
-      const params = {
-        access: false,
-        include_docs: false,
-      };
-      const res = await fetch(
-        `${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(
-          params,
-        )}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      if (!res.ok) throw Error("bad ID's fetch");
-      const json = await res.json();
-      const trueResult = json.rows.map(element => element.id);
-      this.props.loadAllKeysSuccess(trueResult);
-
-      const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
-      console.log('pageCount: ', pageCount);
-      this.props.updatePageCount(pageCount);
-      this.getChannelFeed();
-
-      return Promise.resolve(trueResult);
-    } catch (err) {
-      console.log(err);
-    }
-    return true;
+    const trueResult = await getAllAvailableKeys(
+      this.props.storeData.selectBucket.bucket,
+    );
+    this.props.loadAllKeysSuccess(trueResult);
+    const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
+    console.log('pageCount: ', pageCount);
+    this.props.updatePageCount(pageCount);
+    this.getChannelFeed();
   }
 
   async getChannelFeed() {
-    const { storeData } = this.props; // to access store methods!
-    console.log(` CURRENT PAGE: ${storeData.updateCurrentPage.currentPage}`);
-    const rowsPerPage = manifest.rowsPerPage;
-    const currentPage = storeData.updateCurrentPage.currentPage;
-    const startIdx = (currentPage - 1) * rowsPerPage;
-    const endIdx = currentPage * rowsPerPage;
-
-    try {
-      const syncgatewayUrl = manifest.syncgatewayUrl;
-      const selectedBucket = storeData.selectBucket.bucket;
-
-      const params = {
-        access: false,
-        include_docs: true,
-        keys: JSON.stringify(
-          storeData.loadAllKeysSuccess.allKeys.slice(startIdx, endIdx),
-        ),
-      };
-      const res = await fetch(
-        `${syncgatewayUrl}/${selectedBucket}/_all_docs?${queryString.stringify(
-          params,
-        )}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      if (!res.ok) throw Error('bad data fetch');
-      const json = await res.json();
-      const trueResult = json.rows.map(element => element.doc);
-      this.props.loadDataSuccess(trueResult);
-
-      return Promise.resolve(trueResult);
-    } catch (err) {
-      console.log(err);
-    }
-    return true;
+    const trueResult = await getChannelFeed(
+      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.loadAllKeysSuccess.allKeys,
+      this.props.storeData.updateCurrentPage.currentPage,
+    );
+    this.props.loadDataSuccess(trueResult);
   }
 
   async updateJson(editedDoc, docId) {
@@ -216,7 +156,18 @@ class App extends Component {
     // const bucketDefaultKey = true;
     await this.props.selectBucket(event.target.value);
     // console.log('storeData in bucketSelected: ', storeData);
+
     this.getAllAvailableKeys();
+
+    // const syncgatewayUrl = manifest.syncgatewayUrl;
+    // const selectedBucket = this.props.storeData.selectBucket.bucket;
+    // const rowsPerPage = manifest.rowsPerPage;
+    //
+    // await this.props.getAllAvailableKeys({
+    //   syncgatewayUrl,
+    //   selectedBucket,
+    //   rowsPerPage,
+    // })();
   }
 
   //eslint-disable-next-line
@@ -303,7 +254,6 @@ class App extends Component {
             </div>
           </div>
         </div>
-
         <div>
           <ReactPaginate
             previousLabel={'previous'}
@@ -323,7 +273,6 @@ class App extends Component {
           {storeData.dataReducer && storeData.dataReducer.data
             ? storeData.dataReducer.data.map(object => {
                 if (storeData.selectBucket.bucket) {
-                  console.log('in Display');
                   return (
                     <Display
                       key={object._id}
@@ -337,7 +286,7 @@ class App extends Component {
                 }
                 return true;
               })
-            : console.log('NOT in Display')}
+            : null}
         </div>
       </div>
     );
@@ -351,14 +300,32 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {
-  foundDocument,
-  selectBucket,
-  loadAllKeysSuccess,
-  updateCurrentPage,
-  updatePageCount,
-  searchDocument,
-  loadDataSuccess,
-  updateStatus,
-  updateSaveButton,
-})(App);
+// export default connect(mapStateToProps, {
+//   foundDocument,
+//   selectBucket,
+//   loadAllKeysSuccess,
+//   updateCurrentPage,
+//   updatePageCount,
+//   searchDocument,
+//   loadDataSuccess,
+//   updateStatus,
+//   updateSaveButton,
+// })(App);
+
+export default connect(mapStateToProps, dispatch =>
+  bindActionCreators(
+    {
+      foundDocument,
+      selectBucket,
+      loadAllKeysSuccess,
+      updateCurrentPage,
+      updatePageCount,
+      searchDocument,
+      loadDataSuccess,
+      updateStatus,
+      updateSaveButton,
+      getAllAvailableKeys,
+    },
+    dispatch,
+  ),
+)(App);
