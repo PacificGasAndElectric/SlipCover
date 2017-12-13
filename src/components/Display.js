@@ -8,27 +8,18 @@ import {
   updateSaveButton,
   selectBucket,
 } from '../actions';
-import updateJson from './updateJson';
+import jsonValidation from './validation/jsonValidation.js';
 
 const fileDownload = require('react-file-download');
 
-/* eslint no-underscore-dangle: [2, { "allow": ["_id"] }] */
-
-const IsJsonString = str => {
-  try {
-    JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-};
-
+/* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 class Display extends Component {
   static get propTypes() {
     return {
       prop: PropTypes.object.isRequired,
       index: PropTypes.string.isRequired,
       removeJson: PropTypes.func.isRequired,
+      updateJson: PropTypes.func.isRequired,
       //eslint-disable-next-line
       foundID: PropTypes.string,
     };
@@ -41,7 +32,6 @@ class Display extends Component {
     this.cancelBtn = this.cancelBtn.bind(this);
     this.download = this.download.bind(this);
     this.removeBtn = this.removeBtn.bind(this);
-    this.updateDocument = this.updateDocument.bind(this);
   }
 
   editBtn(id) {
@@ -54,34 +44,23 @@ class Display extends Component {
     this.props.updateStatus(status, id);
   }
 
-  async updateDocument(editedDoc, docId) {
-    await updateJson(
-      this.props.storeData.selectBucket.bucket,
-      this.props.storeData.dataReducer.data,
-      editedDoc,
-      docId,
-    );
-  }
-
-  async saveBtn(id) {
+  saveBtn(id, rev) {
     const status = false;
-    const isJSON = IsJsonString(this.refs.newText.value);
+    const isJSON = jsonValidation(this.refs.newText.value);
 
     if (isJSON) {
       const newDoc = JSON.parse(this.refs.newText.value);
       const oldDoc = this.props.prop;
 
-      await this.props.updateSaveButton(status, id);
-      await this.props.saveDocument(id, newDoc, oldDoc); // IXAK check promise.all
-      await this.updateDocument(newDoc, id);
-    } else {
-      alert('This is NOT accepable JSON format!');
+      this.props.updateSaveButton(status, id); // update store
+      this.props.saveDocument(id, newDoc, oldDoc); // save doc in store
+      this.props.updateJson(newDoc, id, rev); // request for PUT fetch
     }
   }
 
-  async removeBtn(id) {
-    await this.props.removeJson(id);
-    await this.props.removeDocument(id);
+  removeBtn(id, rev) {
+    this.props.removeJson(id, rev);
+    this.props.removeDocument(id);
   }
 
   download() {
@@ -106,6 +85,7 @@ class Display extends Component {
 
   renderForm() {
     const id = this.props.prop._id;
+    const rev = this.props.prop._rev;
     return (
       <div className="editBtnJsonList">
         <textarea
@@ -113,13 +93,16 @@ class Display extends Component {
           id="enableTextArea"
           defaultValue={JSON.stringify(this.props.prop, null, 2)}
         />
-        <button onClick={() => this.saveBtn(id)} className="save-button">
+        <button onClick={() => this.saveBtn(id, rev)} className="save-button">
           Save
         </button>
         <button onClick={() => this.cancelBtn(id)} className="cancel-button">
           Cancel
         </button>
-        <button onClick={() => this.removeBtn(id)} className="remove-button">
+        <button
+          onClick={() => this.removeBtn(id, rev)}
+          className="remove-button"
+        >
           Remove
         </button>
         <a>

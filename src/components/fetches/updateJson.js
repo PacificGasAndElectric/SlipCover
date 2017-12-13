@@ -3,20 +3,12 @@ import manifest from '../../manifest.js';
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 
-export default async (selectedBucket, arr, editedDoc, docId) => {
+export default async (selectedBucket, newDoc, id, rev) => {
   let doc = '';
-  arr.find((obj, i) => {
-    if (obj._id === docId) {
-      doc = arr[i];
-      doc = editedDoc;
-      doc._id = obj._id; // if user try to chnage doc _id
-      doc._rev = obj._rev; // if user try to chnage doc _rev
-      doc.name = 'Ibrahim';
-      doc.updated = new Date().toJSON();
-      return true; // stop searching
-    }
-    return false;
-  });
+  doc = newDoc;
+  doc._id = id; // if user try to chnage doc _id
+  doc._rev = rev; // if user try to chnage doc _rev
+  doc.updated = new Date().toJSON();
 
   try {
     const syncgatewayUrl = manifest.syncgatewayUrl;

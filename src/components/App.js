@@ -5,9 +5,11 @@ import React, { Component } from 'react';
 // import LinearProgress from 'material-ui/LinearProgress';
 import ReactPaginate from 'react-paginate';
 import Display from './Display.js';
-import getAllAvailableKeys from './getAllAvailableKeys';
-import getChannelFeed from './getChannelFeed';
-import removeJson from './removeJson';
+import MenuGenerator from './MenuGenerator.js';
+import getAllAvailableKeys from './fetches/getAllAvailableKeys';
+import getChannelFeed from './fetches/getChannelFeed';
+import removeJson from './fetches/removeJson';
+import updateJson from './fetches/updateJson';
 
 import '../App.css';
 import {
@@ -28,6 +30,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.removeJson = this.removeJson.bind(this);
+    this.updateJson = this.updateJson.bind(this);
     this.getChannelFeed = this.getChannelFeed.bind(this);
     this.getAllAvailableKeys = this.getAllAvailableKeys.bind(this);
     this.bucketHandleChecked = this.bucketHandleChecked.bind(this);
@@ -50,7 +53,7 @@ class App extends Component {
   async getAllAvailableKeys() {
     const trueResult = await getAllAvailableKeys(
       this.props.storeData.selectBucket.bucket,
-    );
+    ); // GET fetch
     this.props.loadAllKeysSuccess(trueResult);
     const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
     console.log('pageCount: ', pageCount);
@@ -63,37 +66,28 @@ class App extends Component {
       this.props.storeData.selectBucket.bucket,
       this.props.storeData.loadAllKeysSuccess.allKeys,
       this.props.storeData.updateCurrentPage.currentPage,
-    );
+    ); // GET fetch
     this.props.loadDataSuccess(trueResult);
   }
 
-  // remove doc
-  async removeJson(docId) {
+  async removeJson(id, rev) {
     await removeJson(
       this.props.storeData.selectBucket.bucket,
       this.props.storeData.dataReducer.data,
-      docId,
-    );
+      id,
+      rev,
+    ); // DELETE fetch
     this.getAllAvailableKeys();
   }
 
+  async updateJson(newDoc, id, rev) {
+    await updateJson(this.props.storeData.selectBucket.bucket, newDoc, id, rev); // PUT fetch
+    this.getChannelFeed(); // incase a doc saved multiple times
+  }
+
   async bucketHandleChecked(event) {
-    // const { storeData } = this.props;
-    // const bucketDefaultKey = true;
     await this.props.selectBucket(event.target.value);
-    // console.log('storeData in bucketSelected: ', storeData);
-
     this.getAllAvailableKeys();
-
-    // const syncgatewayUrl = manifest.syncgatewayUrl;
-    // const selectedBucket = this.props.storeData.selectBucket.bucket;
-    // const rowsPerPage = manifest.rowsPerPage;
-    //
-    // await this.props.getAllAvailableKeys({
-    //   syncgatewayUrl,
-    //   selectedBucket,
-    //   rowsPerPage,
-    // })();
   }
 
   //eslint-disable-next-line
@@ -134,52 +128,12 @@ class App extends Component {
     const { storeData } = this.props;
     return (
       <div>
-        <div className="menuBar">
-          <h1 className="header"> Sync-Gateway-SlipCover Open Source </h1>
-          <div className="menuRow">
-            {/* Buckets dropdown menu */}
-            <div className="bucket-box">
-              <select
-                className="bucketSelectList"
-                onChange={e => {
-                  this.bucketHandleChecked(e);
-                }}
-                value={storeData.selectBucket.bucket}
-              >
-                <option
-                // key="default"
-                // disabled={
-                //   this.props.storeData.selectedBucket.bucketDefaultKey
-                // }
-                >
-                  -- Select Buckets --
-                </option>
-                {manifest.bucket.map(m => (
-                  <option key={m.toString()} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {/* search document id */}
-            <div className="search">
-              <form className="inputBox" onSubmit={this.searchHandleSubmit}>
-                <input
-                  className="label"
-                  type="text"
-                  name="name"
-                  placeholder="Document ID"
-                  onChange={this.searchHandleChange}
-                />
-                <input
-                  className="submit"
-                  type="submit"
-                  value="&#x1F50D; Search"
-                />
-              </form>
-            </div>
-          </div>
-        </div>
+        <MenuGenerator
+          bucketHandleChecked={this.bucketHandleChecked}
+          selectBucket={storeData.selectBucket.bucket}
+          searchHandleSubmit={this.searchHandleSubmit}
+          searchHandleChange={this.searchHandleChange}
+        />
         <div>
           <ReactPaginate
             previousLabel={'previous'}
@@ -205,6 +159,7 @@ class App extends Component {
                       index={object._id}
                       prop={object}
                       removeJson={this.removeJson}
+                      updateJson={this.updateJson}
                       foundID={storeData.foundDocument.id}
                     />
                   );
