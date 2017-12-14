@@ -7,7 +7,7 @@ export default async (selectedBucket, allKeys, currentPage) => {
   const rowsPerPage = manifest.rowsPerPage;
   const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = currentPage * rowsPerPage;
-
+  let trueResult = '';
   try {
     const syncgatewayUrl = manifest.syncgatewayUrl;
 
@@ -27,12 +27,16 @@ export default async (selectedBucket, allKeys, currentPage) => {
         },
       },
     );
-    if (!res.ok) throw Error('bad data fetch');
+    if (!res.ok) {
+      trueResult = `bad data fetch: ${res.status} ${res.statusText}`;
+      alert(trueResult); // eslint-disable-line no-alert
+      return trueResult;
+    }
     const json = await res.json();
-    const trueResult = json.rows.map(element => element.doc);
+    trueResult = json.rows.map(element => element.doc);
     return Promise.resolve(trueResult);
   } catch (err) {
     console.log(err);
   }
-  return true;
+  return trueResult;
 };

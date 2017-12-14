@@ -2,6 +2,7 @@ import * as queryString from 'query-string';
 import manifest from '../../manifest.js';
 
 export default async selectedBucket => {
+  let trueResult = '';
   try {
     const syncgatewayUrl = manifest.syncgatewayUrl;
 
@@ -20,13 +21,17 @@ export default async selectedBucket => {
         },
       },
     );
-    if (!res.ok) throw Error("bad ID's fetch");
+    if (!res.ok) {
+      trueResult = `bad keys fetch: ${res.status} ${res.statusText}`;
+      alert(trueResult);
+      return trueResult;
+    }
     const json = await res.json();
-    const trueResult = json.rows.map(element => element.id);
+    trueResult = json.rows.map(element => element.id);
 
     return Promise.resolve(trueResult);
   } catch (err) {
     console.log(err);
   }
-  return true;
+  return trueResult;
 };

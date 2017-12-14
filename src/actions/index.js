@@ -1,10 +1,14 @@
 // Action Creators - methods that create and return actions for reducers to manipulate the redux store.
 // Actions - the plain JavaScript object that Action Creators return. Must include a type parameter with a Redux constant and a certain data payload.
 import {
-  SAVE_DOCUMENT,
-  REMOVE_DOCUMENT,
   LOAD_ALLKEYS_SUCCESS,
+  LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
+  LOAD_DATA_FAILED,
+  REMOVE_DOCUMENT,
+  REMOVE_DOCUMENT_FAILED,
+  SAVE_DOCUMENT,
+  SAVE_DOCUMENT_FAILED,
   SELECT_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
@@ -19,6 +23,28 @@ export const loadAllKeysSuccess = allKeys => ({
   allKeys,
 });
 
+export const loadAllKeysFailed = error => ({
+  type: LOAD_ALLKEYS_FAILED,
+  error,
+});
+
+export const loadDataSuccess = rows => ({
+  type: LOAD_DATA_SUCCESS,
+  rows,
+});
+
+export const loadDatafailed = error => ({
+  type: LOAD_DATA_FAILED,
+  error,
+});
+
+export const removeDocument = id => ({ type: REMOVE_DOCUMENT, id });
+
+export const removeDocumentFailed = error => ({
+  type: REMOVE_DOCUMENT_FAILED,
+  error,
+});
+
 export const saveDocument = (id, newDoc, oldDoc) => ({
   type: SAVE_DOCUMENT,
   id,
@@ -26,11 +52,9 @@ export const saveDocument = (id, newDoc, oldDoc) => ({
   oldDoc,
 });
 
-export const removeDocument = id => ({ type: REMOVE_DOCUMENT, id });
-
-export const loadDataSuccess = rows => ({
-  type: LOAD_DATA_SUCCESS,
-  rows,
+export const saveDocumentFailed = error => ({
+  type: SAVE_DOCUMENT_FAILED,
+  error,
 });
 
 export const selectBucket = bucket => ({

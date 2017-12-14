@@ -5,6 +5,7 @@ import manifest from '../../manifest.js';
 
 export default async (selectedBucket, newDoc, id, rev) => {
   let doc = '';
+  let trueResult = '';
   doc = newDoc;
   doc._id = id; // if user try to chnage doc _id
   doc._rev = rev; // if user try to chnage doc _rev
@@ -29,8 +30,13 @@ export default async (selectedBucket, newDoc, id, rev) => {
         body: JSON.stringify(doc),
       },
     );
-    if (!res.ok) throw Error('bad data fetch');
+    if (!res.ok) {
+      trueResult = `bad update fetch: ${res.status} ${res.statusText}`;
+      alert(trueResult); // eslint-disable-line no-alert
+      return trueResult;
+    }
   } catch (err) {
     console.log(err);
   }
+  return trueResult;
 };

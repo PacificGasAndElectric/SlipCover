@@ -3,10 +3,14 @@
 import { combineReducers } from 'redux';
 
 import {
-  SAVE_DOCUMENT,
-  REMOVE_DOCUMENT,
   LOAD_ALLKEYS_SUCCESS,
+  LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
+  LOAD_DATA_FAILED,
+  REMOVE_DOCUMENT,
+  REMOVE_DOCUMENT_FAILED,
+  SAVE_DOCUMENT,
+  SAVE_DOCUMENT_FAILED,
   SELECT_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
@@ -41,6 +45,42 @@ const loadAllKeysSuccess = (state = [], action) => {
   switch (action.type) {
     case LOAD_ALLKEYS_SUCCESS:
       return { ...state, allKeys: action.allKeys };
+    default:
+      return state;
+  }
+};
+
+const loadAllKeysFailed = (state = [], action) => {
+  switch (action.type) {
+    case LOAD_ALLKEYS_FAILED:
+      return { ...state, error: action.error };
+    default:
+      return state;
+  }
+};
+
+const loadDatafailed = (state = [], action) => {
+  switch (action.type) {
+    case LOAD_DATA_FAILED:
+      return { ...state, error: action.error };
+    default:
+      return state;
+  }
+};
+
+const removeDocumentFailed = (state = [], action) => {
+  switch (action.type) {
+    case REMOVE_DOCUMENT_FAILED:
+      return { ...state, error: action.error };
+    default:
+      return state;
+  }
+};
+
+const saveDocumentFailed = (state = [], action) => {
+  switch (action.type) {
+    case SAVE_DOCUMENT_FAILED:
+      return { ...state, error: action.error };
     default:
       return state;
   }
@@ -113,6 +153,10 @@ export default combineReducers({
   foundDocument,
   selectBucket,
   loadAllKeysSuccess,
+  loadAllKeysFailed,
+  loadDatafailed,
+  removeDocumentFailed,
+  saveDocumentFailed,
   updateCurrentPage,
   updatePageCount,
   searchDocument,

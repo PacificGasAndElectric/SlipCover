@@ -16,10 +16,14 @@ import {
   foundDocument,
   selectBucket,
   loadAllKeysSuccess,
+  loadAllKeysFailed,
+  loadDataSuccess,
+  loadDatafailed,
+  removeDocumentFailed,
+  saveDocumentFailed,
   updateCurrentPage,
   updatePageCount,
   searchDocument,
-  loadDataSuccess,
   updateStatus,
   updateSaveButton,
 } from '../actions';
@@ -54,11 +58,16 @@ class App extends Component {
     const trueResult = await getAllAvailableKeys(
       this.props.storeData.selectBucket.bucket,
     ); // GET fetch
-    this.props.loadAllKeysSuccess(trueResult);
-    const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
-    console.log('pageCount: ', pageCount);
-    this.props.updatePageCount(pageCount);
-    this.getChannelFeed();
+
+    if (trueResult.includes('bad keys fetch:')) {
+      this.props.loadAllKeysFailed(trueResult); // in store
+    } else {
+      this.props.loadAllKeysSuccess(trueResult);
+      const pageCount = Math.ceil(trueResult.length / manifest.rowsPerPage);
+      console.log('pageCount: ', pageCount);
+      this.props.updatePageCount(pageCount);
+      this.getChannelFeed();
+    }
   }
 
   async getChannelFeed() {
@@ -67,21 +76,40 @@ class App extends Component {
       this.props.storeData.loadAllKeysSuccess.allKeys,
       this.props.storeData.updateCurrentPage.currentPage,
     ); // GET fetch
-    this.props.loadDataSuccess(trueResult);
+    if (trueResult.includes('bad data fetch:')) {
+      this.props.loadDatafailed(trueResult);
+    } else {
+      this.props.loadDataSuccess(trueResult);
+    }
   }
 
   async removeJson(id, rev) {
-    await removeJson(
+    const trueResult = await removeJson(
       this.props.storeData.selectBucket.bucket,
       this.props.storeData.dataReducer.data,
       id,
       rev,
     ); // DELETE fetch
-    this.getAllAvailableKeys();
+    if (trueResult.includes('bad remove fetch:')) {
+      this.props.removeDocumentFailed(trueResult);
+    } else {
+      this.getAllAvailableKeys();
+    }
   }
 
   async updateJson(newDoc, id, rev) {
-    await updateJson(this.props.storeData.selectBucket.bucket, newDoc, id, rev); // PUT fetch
+    const trueResult = await updateJson(
+      this.props.storeData.selectBucket.bucket,
+      newDoc,
+      id,
+      rev,
+    ); // PUT fetch
+    if (trueResult.includes('bad update fetch:')) {
+      console.log('in store');
+      this.props.saveDocumentFailed(trueResult);
+    } else {
+      this.getAllAvailableKeys();
+    }
     this.getChannelFeed(); // incase a doc saved multiple times
   }
 
@@ -119,7 +147,7 @@ class App extends Component {
       console.log('Key is found in pageNumber: ', currentPage);
       this.getChannelFeed();
     } else {
-      alert('Document id is not found!');
+      alert('Document id is not found!'); // eslint-disable-line no-alert
       event.preventDefault();
     }
   }
@@ -184,10 +212,14 @@ export default connect(mapStateToProps, {
   foundDocument,
   selectBucket,
   loadAllKeysSuccess,
+  loadAllKeysFailed,
+  loadDataSuccess,
+  loadDatafailed,
+  removeDocumentFailed,
+  saveDocumentFailed,
   updateCurrentPage,
   updatePageCount,
   searchDocument,
-  loadDataSuccess,
   updateStatus,
   updateSaveButton,
 })(App);
