@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import RaisedButton from 'material-ui/RaisedButton';
+
 import {
   saveDocument,
   removeDocument,
@@ -9,6 +11,8 @@ import {
   selectBucket,
 } from '../actions';
 import jsonValidation from './validation/jsonValidation.js';
+// import Card from './Card';
+// import Snackbar from './Snackbar';
 
 const fileDownload = require('react-file-download');
 
@@ -76,9 +80,10 @@ class Display extends Component {
         ) : (
           <pre>{`id: ${id}`}</pre>
         )}
-        <button onClick={() => this.editBtn(id)} className="edit-button">
-          Edit
-        </button>
+        <RaisedButton
+          onClick={() => this.editBtn(id)}
+          label={<span className="edit-button">Edit</span>}
+        />
       </div>
     );
   }
@@ -93,23 +98,22 @@ class Display extends Component {
           id="enableTextArea"
           defaultValue={JSON.stringify(this.props.prop, null, 2)}
         />
-        <button onClick={() => this.saveBtn(id, rev)} className="save-button">
-          Save
-        </button>
-        <button onClick={() => this.cancelBtn(id)} className="cancel-button">
-          Cancel
-        </button>
-        <button
+        <RaisedButton
+          onClick={() => this.saveBtn(id, rev)}
+          label={<span className="save-button">Save</span>}
+        />
+        <RaisedButton
+          onClick={() => this.cancelBtn(id)}
+          label={<span className="cancel-button">Cancel</span>}
+        />
+        <RaisedButton
           onClick={() => this.removeBtn(id, rev)}
-          className="remove-button"
-        >
-          Remove
-        </button>
-        <a>
-          <button className="downloadBtn" onClick={() => this.download()}>
-            Download
-          </button>
-        </a>
+          label={<span className="remove-button">Remove</span>}
+        />
+        <RaisedButton
+          onClick={() => this.download()}
+          label={<span className="downloadBtn">Download</span>}
+        />
       </div>
     );
   }

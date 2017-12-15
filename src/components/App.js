@@ -1,9 +1,13 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import LinearProgress from 'material-ui/LinearProgress';
 import ReactPaginate from 'react-paginate';
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import LinearProgress from './LinearProgress';
+
+// import LinearProgress from 'material-ui/LinearProgress';
+
 import Display from './Display.js';
 import MenuGenerator from './MenuGenerator.js';
 import getAllAvailableKeys from './fetches/getAllAvailableKeys';
@@ -28,6 +32,8 @@ import {
   updateSaveButton,
 } from '../actions';
 import manifest from '../manifest.js';
+
+injectTapEventPlugin();
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 class App extends Component {
@@ -155,48 +161,51 @@ class App extends Component {
   render() {
     const { storeData } = this.props;
     return (
-      <div>
-        <MenuGenerator
-          bucketHandleChecked={this.bucketHandleChecked}
-          selectBucket={storeData.selectBucket.bucket}
-          searchHandleSubmit={this.searchHandleSubmit}
-          searchHandleChange={this.searchHandleChange}
-        />
+      <MuiThemeProvider>
         <div>
-          <ReactPaginate
-            previousLabel={'previous'}
-            nextLabel={'next'}
-            breakLabel={<a href="">...</a>}
-            breakClassName={'break-me'}
-            pageCount={storeData.updatePageCount.pageCount}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={this.handlePageClick}
-            containerClassName={'pagination'}
-            subContainerClassName={'pages pagination'}
-            activeClassName={'active'}
+          <LinearProgress />
+          <MenuGenerator
+            bucketHandleChecked={this.bucketHandleChecked}
+            selectBucket={storeData.selectBucket.bucket}
+            searchHandleSubmit={this.searchHandleSubmit}
+            searchHandleChange={this.searchHandleChange}
           />
+          <div>
+            <ReactPaginate
+              previousLabel={'previous'}
+              nextLabel={'next'}
+              breakLabel={<a href="">...</a>}
+              breakClassName={'break-me'}
+              pageCount={storeData.updatePageCount.pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={this.handlePageClick}
+              containerClassName={'pagination'}
+              subContainerClassName={'pages pagination'}
+              activeClassName={'active'}
+            />
+          </div>
+          <div>
+            {storeData.dataReducer && storeData.dataReducer.data
+              ? storeData.dataReducer.data.map(object => {
+                  if (storeData.selectBucket.bucket) {
+                    return (
+                      <Display
+                        key={object._id}
+                        index={object._id}
+                        prop={object}
+                        removeJson={this.removeJson}
+                        updateJson={this.updateJson}
+                        foundID={storeData.foundDocument.id}
+                      />
+                    );
+                  }
+                  return true;
+                })
+              : null}
+          </div>
         </div>
-        <div>
-          {storeData.dataReducer && storeData.dataReducer.data
-            ? storeData.dataReducer.data.map(object => {
-                if (storeData.selectBucket.bucket) {
-                  return (
-                    <Display
-                      key={object._id}
-                      index={object._id}
-                      prop={object}
-                      removeJson={this.removeJson}
-                      updateJson={this.updateJson}
-                      foundID={storeData.foundDocument.id}
-                    />
-                  );
-                }
-                return true;
-              })
-            : null}
-        </div>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
