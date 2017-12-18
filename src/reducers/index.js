@@ -20,7 +20,7 @@ import {
   UPDATE_SAVE_BUTTON,
 } from '../constants';
 
-const foundDocument = (state = '', { type, id }) => {
+export const foundDocument = (state = '', { type, id }) => {
   switch (type) {
     case FOUND_DOCUMENT:
       return {
@@ -32,7 +32,7 @@ const foundDocument = (state = '', { type, id }) => {
   }
 };
 
-const selectBucket = (state = [], { type, bucket }) => {
+export const selectBucket = (state = [], { type, bucket }) => {
   switch (type) {
     case SELECT_BUCKET:
       return { ...state, bucket };
@@ -41,7 +41,7 @@ const selectBucket = (state = [], { type, bucket }) => {
   }
 };
 
-const loadAllKeysSuccess = (state = [], action) => {
+export const loadAllKeysSuccess = (state = [], action) => {
   switch (action.type) {
     case LOAD_ALLKEYS_SUCCESS:
       return { ...state, allKeys: action.allKeys };
@@ -50,7 +50,7 @@ const loadAllKeysSuccess = (state = [], action) => {
   }
 };
 
-const loadAllKeysFailed = (state = [], action) => {
+export const loadAllKeysFailed = (state = [], action) => {
   switch (action.type) {
     case LOAD_ALLKEYS_FAILED:
       return { ...state, error: action.error };
@@ -59,7 +59,7 @@ const loadAllKeysFailed = (state = [], action) => {
   }
 };
 
-const loadDatafailed = (state = [], action) => {
+export const loadDatafailed = (state = [], action) => {
   switch (action.type) {
     case LOAD_DATA_FAILED:
       return { ...state, error: action.error };
@@ -68,7 +68,7 @@ const loadDatafailed = (state = [], action) => {
   }
 };
 
-const removeDocumentFailed = (state = [], action) => {
+export const removeDocumentFailed = (state = [], action) => {
   switch (action.type) {
     case REMOVE_DOCUMENT_FAILED:
       return { ...state, error: action.error };
@@ -77,7 +77,7 @@ const removeDocumentFailed = (state = [], action) => {
   }
 };
 
-const saveDocumentFailed = (state = [], action) => {
+export const saveDocumentFailed = (state = [], action) => {
   switch (action.type) {
     case SAVE_DOCUMENT_FAILED:
       return { ...state, error: action.error };
@@ -86,7 +86,7 @@ const saveDocumentFailed = (state = [], action) => {
   }
 };
 
-const updateCurrentPage = (state = [], action) => {
+export const updateCurrentPage = (state = [], action) => {
   switch (action.type) {
     case UPDATE_CURRENT_PAGE:
       return { ...state, currentPage: action.currentPage };
@@ -95,7 +95,7 @@ const updateCurrentPage = (state = [], action) => {
   }
 };
 
-const updatePageCount = (state = [], action) => {
+export const updatePageCount = (state = [], action) => {
   switch (action.type) {
     case UPDATE_PAGE_COUNT:
       return { ...state, pageCount: action.pageCount };
@@ -104,7 +104,7 @@ const updatePageCount = (state = [], action) => {
   }
 };
 
-const searchDocument = (state = [], action) => {
+export const searchDocument = (state = [], action) => {
   switch (action.type) {
     case SEARCH_DOCUMENT:
       return {
@@ -116,7 +116,7 @@ const searchDocument = (state = [], action) => {
   }
 };
 
-const dataReducer = (state = [], action) => {
+export const dataReducer = (state = [], action) => {
   switch (action.type) {
     case LOAD_DATA_SUCCESS:
       return { ...state, data: action.rows };
