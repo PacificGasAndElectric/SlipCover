@@ -13,3 +13,6 @@ The data will be populated once the docker finish uploading the bucket. It takes
  
 ### yarn run docker-down
 
+# To run the test coverage
+
+### npm run cover
