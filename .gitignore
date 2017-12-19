@@ -67,3 +67,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+
+# for test coverage
+.nyc_output/
+coverage/
+
+yarn-error.log
+yarn.lock

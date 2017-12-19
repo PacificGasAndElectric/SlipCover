@@ -41,75 +41,75 @@ export const selectBucket = (state = [], { type, bucket }) => {
   }
 };
 
-export const loadAllKeysSuccess = (state = [], action) => {
-  switch (action.type) {
+export const loadAllKeysSuccess = (state = [], { type, allKeys }) => {
+  switch (type) {
     case LOAD_ALLKEYS_SUCCESS:
-      return { ...state, allKeys: action.allKeys };
+      return { ...state, allKeys };
     default:
       return state;
   }
 };
 
-export const loadAllKeysFailed = (state = [], action) => {
-  switch (action.type) {
+export const loadAllKeysFailed = (state = [], { type, error }) => {
+  switch (type) {
     case LOAD_ALLKEYS_FAILED:
-      return { ...state, error: action.error };
+      return { ...state, error };
     default:
       return state;
   }
 };
 
-export const loadDatafailed = (state = [], action) => {
-  switch (action.type) {
+export const loadDatafailed = (state = [], { type, error }) => {
+  switch (type) {
     case LOAD_DATA_FAILED:
-      return { ...state, error: action.error };
+      return { ...state, error };
     default:
       return state;
   }
 };
 
-export const removeDocumentFailed = (state = [], action) => {
-  switch (action.type) {
+export const removeDocumentFailed = (state = [], { type, error }) => {
+  switch (type) {
     case REMOVE_DOCUMENT_FAILED:
-      return { ...state, error: action.error };
+      return { ...state, error };
     default:
       return state;
   }
 };
 
-export const saveDocumentFailed = (state = [], action) => {
-  switch (action.type) {
+export const saveDocumentFailed = (state = [], { type, error }) => {
+  switch (type) {
     case SAVE_DOCUMENT_FAILED:
-      return { ...state, error: action.error };
+      return { ...state, error };
     default:
       return state;
   }
 };
 
-export const updateCurrentPage = (state = [], action) => {
-  switch (action.type) {
+export const updateCurrentPage = (state = [], { type, currentPage }) => {
+  switch (type) {
     case UPDATE_CURRENT_PAGE:
-      return { ...state, currentPage: action.currentPage };
+      return { ...state, currentPage };
     default:
       return state;
   }
 };
 
-export const updatePageCount = (state = [], action) => {
-  switch (action.type) {
+export const updatePageCount = (state = [], { type, pageCount }) => {
+  switch (type) {
     case UPDATE_PAGE_COUNT:
-      return { ...state, pageCount: action.pageCount };
+      return { ...state, pageCount };
     default:
       return state;
   }
 };
 
-export const searchDocument = (state = [], action) => {
-  switch (action.type) {
+export const searchDocument = (state = [], { type, searchValue }) => {
+  switch (type) {
     case SEARCH_DOCUMENT:
       return {
         ...state,
-        searchValue: action.searchValue,
+        searchValue,
       };
     default:
       return state;
@@ -137,10 +137,6 @@ export const dataReducer = (state = [], action) => {
         ...state,
         id: action.id,
         status: action.status,
-        // status: state.data.indexOf(action.id) ? action.status : !action.status,
-        // status: state.data.map(
-        //   ele => (ele._id === action.id ? action.status : !action.status),
-        // ),
       };
     case UPDATE_SAVE_BUTTON:
       return { ...state, id: action.id, status: action.status };
