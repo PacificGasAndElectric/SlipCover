@@ -53,8 +53,10 @@ class App extends Component {
     const { storeData } = this.props;
     const currentPage = 1;
     const status = false;
+    const bucketDefaultKey = false;
     this.props.updateStatus(status);
     this.props.updateSaveButton(status);
+    this.props.selectBucket('--Select Buckets--', bucketDefaultKey);
     if (!storeData.updateCurrentPage.currentPage) {
       this.props.updateCurrentPage(currentPage);
     }
@@ -120,7 +122,7 @@ class App extends Component {
   }
 
   async bucketHandleChecked(event) {
-    await this.props.selectBucket(event.target.value);
+    await this.props.selectBucket(event.target.value, true);
     this.getAllAvailableKeys();
   }
 
@@ -166,24 +168,27 @@ class App extends Component {
           <LinearProgress />
           <MenuGenerator
             bucketHandleChecked={this.bucketHandleChecked}
+            bucketDefaultKey={storeData.selectBucket.bucketDefaultKey}
             selectBucket={storeData.selectBucket.bucket}
             searchHandleSubmit={this.searchHandleSubmit}
             searchHandleChange={this.searchHandleChange}
           />
           <div>
-            <ReactPaginate
-              previousLabel={'previous'}
-              nextLabel={'next'}
-              breakLabel={<a href="">...</a>}
-              breakClassName={'break-me'}
-              pageCount={storeData.updatePageCount.pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={5}
-              onPageChange={this.handlePageClick}
-              containerClassName={'pagination'}
-              subContainerClassName={'pages pagination'}
-              activeClassName={'active'}
-            />
+            {storeData.dataReducer && storeData.dataReducer.data ? (
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={<a href="">...</a>}
+                breakClassName={'break-me'}
+                pageCount={storeData.updatePageCount.pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={this.handlePageClick}
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'active'}
+              />
+            ) : null}
           </div>
           <div>
             {storeData.dataReducer && storeData.dataReducer.data

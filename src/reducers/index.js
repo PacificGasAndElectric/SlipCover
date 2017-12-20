@@ -33,10 +33,13 @@ export const foundDocument = (state = '', { type, id }) => {
   }
 };
 
-export const selectBucket = (state = [], { type, bucket }) => {
+export const selectBucket = (
+  state = [],
+  { type, bucket, bucketDefaultKey },
+) => {
   switch (type) {
     case SELECT_BUCKET:
-      return { ...state, bucket };
+      return { ...state, bucket, bucketDefaultKey };
     default:
       return state;
   }

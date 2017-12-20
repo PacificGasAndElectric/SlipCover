@@ -37,9 +37,10 @@ import {
 } from './index';
 
 test('select a bucket - action', t => {
-  t.deepEqual(selectBucket('beer-sample'), {
+  t.deepEqual(selectBucket('beer-sample', false), {
     type: SELECT_BUCKET,
     bucket: 'beer-sample',
+    bucketDefaultKey: false,
   });
 });
 

@@ -37,9 +37,11 @@ test('should set the current bucket', t => {
   const action = {
     type: SELECT_BUCKET,
     bucket: 'beer-sample',
+    bucketDefaultKey: false,
   };
   const result = {
     bucket: 'beer-sample',
+    bucketDefaultKey: false,
   };
   t.deepEqual(selectBucket(state, action), result);
 });
