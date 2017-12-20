@@ -16,6 +16,7 @@ import {
   FOUND_DOCUMENT,
   UPDATE_STATUS,
   UPDATE_SAVE_BUTTON,
+  PROGRESS_BAR,
 } from '../constants';
 
 export const loadAllKeysSuccess = allKeys => ({
@@ -92,4 +93,9 @@ export const updateSaveButton = (status, id) => ({
   type: UPDATE_SAVE_BUTTON,
   status,
   id,
+});
+
+export const progressBar = timer => ({
+  type: PROGRESS_BAR,
+  timer,
 });

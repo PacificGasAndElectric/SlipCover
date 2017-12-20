@@ -15,6 +15,7 @@ import {
   SEARCH_DOCUMENT,
   UPDATE_STATUS,
   UPDATE_SAVE_BUTTON,
+  PROGRESS_BAR,
 } from '../constants';
 import {
   selectBucket,
@@ -28,6 +29,7 @@ import {
   foundDocument,
   searchDocument,
   dataReducer, // saveDocument, removeDocument, loadDataSuccess, updateStatus, updateSaveButton
+  progressBar,
 } from './index';
 
 test('should set the current bucket', t => {
@@ -289,4 +291,15 @@ test('save button flag should be updated', t => {
     id: '195',
   };
   t.deepEqual(dataReducer(state, action), result); // updateSaveButton
+});
+
+test('timer should be updated when load the page', t => {
+  const timer = 99.2;
+  const state = [];
+  const action = {
+    type: PROGRESS_BAR,
+    timer,
+  };
+  const result = { timer };
+  t.deepEqual(progressBar(state, action), result);
 });

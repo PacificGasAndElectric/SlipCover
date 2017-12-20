@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
+import { connect } from 'react-redux';
+import { progressBar } from '../actions';
 
-export default class LinearProgressExampleDeterminate extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      completed: 0,
-    };
+class LinearProgressExampleDeterminate extends Component {
+  componentWillMount() {
+    this.props.progressBar(0);
   }
 
   componentDidMount() {
+    this.props.progressBar(0);
     this.timer = setTimeout(() => this.progress(5), 1000);
   }
 
@@ -20,15 +19,30 @@ export default class LinearProgressExampleDeterminate extends React.Component {
 
   progress(completed) {
     if (completed > 100) {
-      this.setState({ completed: 100 });
+      const timer = 100;
+      this.props.progressBar(timer);
     } else {
-      this.setState({ completed });
+      const timer = completed;
+      this.props.progressBar(timer);
       const diff = Math.random() * 10;
-      this.timer = setTimeout(() => this.progress(completed + diff), 1000);
+      this.timer = setTimeout(() => this.progress(completed + diff), 3000);
     }
   }
 
   render() {
-    return <LinearProgress mode="determinate" value={this.state.completed} />;
+    const { storeData } = this.props;
+    return (
+      <LinearProgress mode="determinate" value={storeData.progressBar.timer} />
+    );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    storeData: state,
+  };
+}
+
+export default connect(mapStateToProps, {
+  progressBar,
+})(LinearProgressExampleDeterminate);

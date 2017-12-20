@@ -15,6 +15,7 @@ import {
   SEARCH_DOCUMENT,
   UPDATE_STATUS,
   UPDATE_SAVE_BUTTON,
+  PROGRESS_BAR,
 } from '../constants';
 import {
   selectBucket,
@@ -32,6 +33,7 @@ import {
   searchDocument,
   updateStatus,
   updateSaveButton,
+  progressBar,
 } from './index';
 
 test('select a bucket - action', t => {
@@ -166,5 +168,13 @@ test('update save button flag - action', t => {
     type: UPDATE_SAVE_BUTTON,
     status: true,
     id: '195',
+  });
+});
+
+test('progress bar timer - action', t => {
+  const timer = 13.567;
+  t.deepEqual(progressBar(timer), {
+    type: PROGRESS_BAR,
+    timer,
   });
 });

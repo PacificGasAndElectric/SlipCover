@@ -18,6 +18,7 @@ import {
   FOUND_DOCUMENT,
   UPDATE_STATUS,
   UPDATE_SAVE_BUTTON,
+  PROGRESS_BAR,
 } from '../constants';
 
 export const foundDocument = (state = '', { type, id }) => {
@@ -116,6 +117,15 @@ export const searchDocument = (state = [], { type, searchValue }) => {
   }
 };
 
+export const progressBar = (state = [], { type, timer }) => {
+  switch (type) {
+    case PROGRESS_BAR:
+      return { ...state, timer };
+    default:
+      return state;
+  }
+};
+
 export const dataReducer = (state = [], action) => {
   switch (action.type) {
     case LOAD_DATA_SUCCESS:
@@ -157,4 +167,5 @@ export default combineReducers({
   updatePageCount,
   searchDocument,
   dataReducer,
+  progressBar,
 });
