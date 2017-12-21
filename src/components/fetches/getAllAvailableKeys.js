@@ -1,3 +1,6 @@
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+
 import * as queryString from 'query-string';
 import manifest from '../../manifest.js';
 
@@ -23,7 +26,13 @@ export default async selectedBucket => {
     );
     if (!res.ok) {
       trueResult = `bad keys fetch: ${res.status} ${res.statusText}`;
-      alert(trueResult);
+      Alert.error(trueResult, {
+        offset: 150,
+        timeout: 5000,
+        onShow() {
+          console.log(trueResult);
+        },
+      });
       return trueResult;
     }
     const json = await res.json();

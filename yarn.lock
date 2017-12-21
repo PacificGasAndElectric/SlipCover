@@ -6803,6 +6803,10 @@ react-bootstrap@^0.31.5:
     uncontrollable "^4.1.0"
     warning "^3.0.0"
 
+react-confirm-alert@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-confirm-alert/-/react-confirm-alert-1.0.8.tgz#13cbbcf3d992a245b315ef18cc20382556e3f033"
+
 react-dev-utils@^4.1.0:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.1.tgz#9f2763e7bafa1a1b9c52254d2a479deec280f111"

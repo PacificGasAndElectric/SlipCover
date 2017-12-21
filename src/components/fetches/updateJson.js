@@ -1,3 +1,6 @@
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+
 import * as queryString from 'query-string';
 import manifest from '../../manifest.js';
 
@@ -32,7 +35,13 @@ export default async (selectedBucket, newDoc, id, rev) => {
     );
     if (!res.ok) {
       trueResult = `bad update fetch: ${res.status} ${res.statusText}`;
-      alert(trueResult); // eslint-disable-line no-alert
+      Alert.error(trueResult, {
+        offset: 150,
+        timeout: 5000,
+        onShow() {
+          console.log(trueResult);
+        },
+      });
       return trueResult;
     }
   } catch (err) {

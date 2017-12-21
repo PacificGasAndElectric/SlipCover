@@ -4,10 +4,6 @@ import { connect } from 'react-redux';
 import { progressBar } from '../actions';
 
 class LinearProgressExampleDeterminate extends Component {
-  componentWillMount() {
-    this.props.progressBar(0);
-  }
-
   componentDidMount() {
     this.props.progressBar(0);
     this.timer = setTimeout(() => this.progress(5), 1000);
@@ -31,9 +27,7 @@ class LinearProgressExampleDeterminate extends Component {
 
   render() {
     const { storeData } = this.props;
-    return (
-      <LinearProgress mode="determinate" value={storeData.progressBar.timer} />
-    );
+    return <LinearProgress mode="determinate" value={storeData.progressBar} />;
   }
 }
 

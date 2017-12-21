@@ -48,7 +48,7 @@ test('should set the current bucket', t => {
 
 test('all keys should be loaded', t => {
   const arrOfKeys = ['key1', 'key2', 'key3'];
-  const state = [];
+  const state = {};
   const action = {
     type: LOAD_ALLKEYS_SUCCESS,
     allKeys: arrOfKeys,
@@ -220,26 +220,22 @@ test('fail removing document while fetching', t => {
 });
 
 test('should update the current page', t => {
-  const state = [];
+  const state = '';
   const action = {
     type: UPDATE_CURRENT_PAGE,
     currentPage: 5,
   };
-  const result = {
-    currentPage: 5,
-  };
+  const result = 5;
   t.deepEqual(updateCurrentPage(state, action), result);
 });
 
 test('should update the page count', t => {
-  const state = [];
+  const state = '';
   const action = {
     type: UPDATE_PAGE_COUNT,
     pageCount: 294,
   };
-  const result = {
-    pageCount: 294,
-  };
+  const result = 294;
   t.deepEqual(updatePageCount(state, action), result);
 });
 
@@ -249,21 +245,17 @@ test('document should be found', t => {
     type: FOUND_DOCUMENT,
     id: '8-897657896525251',
   };
-  const result = {
-    id: '8-897657896525251',
-  };
+  const result = '8-897657896525251';
   t.deepEqual(foundDocument(state, action), result);
 });
 
 test('search document should be found', t => {
-  const state = [];
+  const state = '';
   const action = {
     type: SEARCH_DOCUMENT,
     searchValue: '8-897657896525251',
   };
-  const result = {
-    searchValue: '8-897657896525251',
-  };
+  const result = '8-897657896525251';
   t.deepEqual(searchDocument(state, action), result);
 });
 
@@ -302,6 +294,6 @@ test('timer should be updated when load the page', t => {
     type: PROGRESS_BAR,
     timer,
   };
-  const result = { timer };
+  const result = timer;
   t.deepEqual(progressBar(state, action), result);
 });

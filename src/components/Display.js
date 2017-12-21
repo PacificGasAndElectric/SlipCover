@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 import {
   saveDocument,
@@ -56,15 +58,33 @@ class Display extends Component {
       const newDoc = JSON.parse(this.refs.newText.value);
       const oldDoc = this.props.prop;
 
-      this.props.updateSaveButton(status, id); // update store
-      this.props.saveDocument(id, newDoc, oldDoc); // save doc in store
-      this.props.updateJson(newDoc, id, rev); // request for PUT fetch
+      confirmAlert({
+        title: 'Confirm to submit', // Title dialog
+        message: 'Are you sure to save the changes?', // Message dialog
+        confirmLabel: 'Confirm', // Text button confirm
+        cancelLabel: 'Cancel', // Text button cancel
+        onConfirm: () => {
+          this.props.updateSaveButton(status, id); // update store
+          this.props.saveDocument(id, newDoc, oldDoc); // save doc in store
+          this.props.updateJson(newDoc, id, rev); // request for PUT fetch
+        },
+        onCancel: () => {}, // Action after Cancel
+      });
     }
   }
 
   removeBtn(id, rev) {
-    this.props.removeJson(id, rev);
-    this.props.removeDocument(id);
+    confirmAlert({
+      title: 'Confirm to submit', // Title dialog
+      message: 'Are you sure to remove the document?', // Message dialog
+      confirmLabel: 'Confirm', // Text button confirm
+      cancelLabel: 'Cancel', // Text button cancel
+      onConfirm: () => {
+        this.props.removeJson(id, rev);
+        this.props.removeDocument(id);
+      },
+      onCancel: () => {}, // Action after Cancel
+    });
   }
 
   download() {

@@ -24,10 +24,7 @@ import {
 export const foundDocument = (state = '', { type, id }) => {
   switch (type) {
     case FOUND_DOCUMENT:
-      return {
-        ...state,
-        id,
-      };
+      return id;
     default:
       return state;
   }
@@ -45,7 +42,7 @@ export const selectBucket = (
   }
 };
 
-export const loadAllKeysSuccess = (state = [], { type, allKeys }) => {
+export const loadAllKeysSuccess = (state = {}, { type, allKeys }) => {
   switch (type) {
     case LOAD_ALLKEYS_SUCCESS:
       return { ...state, allKeys };
@@ -90,31 +87,28 @@ export const saveDocumentFailed = (state = [], { type, error }) => {
   }
 };
 
-export const updateCurrentPage = (state = [], { type, currentPage }) => {
+export const updateCurrentPage = (state = '', { type, currentPage }) => {
   switch (type) {
     case UPDATE_CURRENT_PAGE:
-      return { ...state, currentPage };
+      return currentPage;
     default:
       return state;
   }
 };
 
-export const updatePageCount = (state = [], { type, pageCount }) => {
+export const updatePageCount = (state = '', { type, pageCount }) => {
   switch (type) {
     case UPDATE_PAGE_COUNT:
-      return { ...state, pageCount };
+      return pageCount;
     default:
       return state;
   }
 };
 
-export const searchDocument = (state = [], { type, searchValue }) => {
+export const searchDocument = (state = '', { type, searchValue }) => {
   switch (type) {
     case SEARCH_DOCUMENT:
-      return {
-        ...state,
-        searchValue,
-      };
+      return searchValue;
     default:
       return state;
   }
@@ -123,7 +117,7 @@ export const searchDocument = (state = [], { type, searchValue }) => {
 export const progressBar = (state = [], { type, timer }) => {
   switch (type) {
     case PROGRESS_BAR:
-      return { ...state, timer };
+      return timer;
     default:
       return state;
   }

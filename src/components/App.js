@@ -1,19 +1,18 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import ReactPaginate from 'react-paginate';
-
+import Alert from 'react-s-alert'; // Alert messages
+import 'react-s-alert/dist/s-alert-default.css'; // CSS for Alert messages
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from './LinearProgress';
-
-// import LinearProgress from 'material-ui/LinearProgress';
-
+import idValidation from './validation/idValidation.js';
 import Display from './Display.js';
 import MenuGenerator from './MenuGenerator.js';
-import getAllAvailableKeys from './fetches/getAllAvailableKeys';
-import getChannelFeed from './fetches/getChannelFeed';
-import removeJson from './fetches/removeJson';
-import updateJson from './fetches/updateJson';
+import getAllAvailableKeys from './fetches/getAllAvailableKeys'; // Fetch: get all keys
+import getChannelFeed from './fetches/getChannelFeed'; // Fetch: get documents based on keys
+import removeJson from './fetches/removeJson'; // Fetch: remove documents
+import updateJson from './fetches/updateJson'; // Fetch: update docuements
 
 import '../App.css';
 import {
@@ -30,6 +29,7 @@ import {
   searchDocument,
   updateStatus,
   updateSaveButton,
+  progressBar,
 } from '../actions';
 import manifest from '../manifest.js';
 
@@ -50,16 +50,11 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const { storeData } = this.props;
-    const currentPage = 1;
-    const status = false;
-    const bucketDefaultKey = false;
-    this.props.updateStatus(status);
-    this.props.updateSaveButton(status);
-    this.props.selectBucket('--Select Buckets--', bucketDefaultKey);
-    if (!storeData.updateCurrentPage.currentPage) {
-      this.props.updateCurrentPage(currentPage);
-    }
+    this.props.updateStatus(false);
+    this.props.updateSaveButton(false);
+    this.props.selectBucket('--Select Buckets--', false);
+    this.props.updateCurrentPage(1);
+    this.props.progressBar(0);
   }
 
   async getAllAvailableKeys() {
@@ -82,7 +77,7 @@ class App extends Component {
     const trueResult = await getChannelFeed(
       this.props.storeData.selectBucket.bucket,
       this.props.storeData.loadAllKeysSuccess.allKeys,
-      this.props.storeData.updateCurrentPage.currentPage,
+      this.props.storeData.updateCurrentPage,
     ); // GET fetch
     if (trueResult.includes('bad data fetch:')) {
       this.props.loadDatafailed(trueResult);
@@ -142,9 +137,11 @@ class App extends Component {
   // search for doc by ID and return it if found
   async searchHandleSubmit(event) {
     const { storeData } = this.props;
-    const id = storeData.searchDocument.searchValue.trim(); // truncate spaces
+    const id = storeData.searchDocument.trim(); // truncate spaces
     const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
-    if (pos !== -1) {
+    const isFound = idValidation(pos, event);
+    console.log('isFound: ', isFound);
+    if (isFound) {
       event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
 
       await this.props.foundDocument(id);
@@ -154,10 +151,8 @@ class App extends Component {
       await this.props.updateCurrentPage(currentPage);
       console.log('Key is found in pageNumber: ', currentPage);
       this.getChannelFeed();
-    } else {
-      alert('Document id is not found!'); // eslint-disable-line no-alert
-      event.preventDefault();
     }
+    event.preventDefault();
   }
 
   render() {
@@ -180,7 +175,7 @@ class App extends Component {
                 nextLabel={'next'}
                 breakLabel={<a href="">...</a>}
                 breakClassName={'break-me'}
-                pageCount={storeData.updatePageCount.pageCount}
+                pageCount={storeData.updatePageCount}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
                 onPageChange={this.handlePageClick}
@@ -201,7 +196,7 @@ class App extends Component {
                         prop={object}
                         removeJson={this.removeJson}
                         updateJson={this.updateJson}
-                        foundID={storeData.foundDocument.id}
+                        foundID={storeData.foundDocument}
                       />
                     );
                   }
@@ -209,6 +204,7 @@ class App extends Component {
                 })
               : null}
           </div>
+          <Alert />
         </div>
       </MuiThemeProvider>
     );
@@ -236,4 +232,5 @@ export default connect(mapStateToProps, {
   searchDocument,
   updateStatus,
   updateSaveButton,
+  progressBar,
 })(App);
