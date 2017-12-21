@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
+
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import MenuItem from 'material-ui/MenuItem';
+import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
+
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
@@ -93,18 +100,36 @@ class Display extends Component {
 
   renderNormal() {
     const id = this.props.prop._id;
+    const rev = this.props.prop._rev;
     return (
-      <div className="editBtnJsonList">
-        {this.props.foundID === id ? (
-          <pre id="highlightID">{`id: ${id}`}</pre>
-        ) : (
-          <pre>{`id: ${id}`}</pre>
-        )}
-        <RaisedButton
-          onClick={() => this.editBtn(id)}
-          label={<span className="edit-button">Edit</span>}
-        />
-      </div>
+      <Toolbar className="editBtnJsonList">
+        <ToolbarGroup firstChild>
+          {this.props.foundID === id ? (
+            <pre id="highlightID">{`Document ID: ${id}`}</pre>
+          ) : (
+            <pre>{`Document ID: ${id}`}</pre>
+          )}
+        </ToolbarGroup>
+        <ToolbarGroup>
+          {/* <ToolbarTitle text="Options" /> */}
+          <ToolbarSeparator />
+          <RaisedButton label="Edit" primary onClick={() => this.editBtn(id)} />
+
+          <IconMenu
+            iconButtonElement={
+              <IconButton touch>
+                <NavigationExpandMoreIcon />
+              </IconButton>
+            }
+          >
+            <MenuItem
+              primaryText="Remove"
+              onClick={() => this.removeBtn(id, rev)}
+            />
+            <MenuItem primaryText="Download" onClick={() => this.download()} />
+          </IconMenu>
+        </ToolbarGroup>
+      </Toolbar>
     );
   }
 
@@ -125,14 +150,6 @@ class Display extends Component {
         <RaisedButton
           onClick={() => this.cancelBtn(id)}
           label={<span className="cancel-button">Cancel</span>}
-        />
-        <RaisedButton
-          onClick={() => this.removeBtn(id, rev)}
-          label={<span className="remove-button">Remove</span>}
-        />
-        <RaisedButton
-          onClick={() => this.download()}
-          label={<span className="downloadBtn">Download</span>}
         />
       </div>
     );

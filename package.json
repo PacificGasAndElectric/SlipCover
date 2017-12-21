@@ -37,6 +37,7 @@
     "cover": "nyc npm run test",
     "watch:test": "npm run test -- --watch",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
+    "prepush": "yarn test",    
     "eject": "react-scripts eject",
     "prettify": "eslint --ext .js --fix src/",
     "lint": "eslint ./src",

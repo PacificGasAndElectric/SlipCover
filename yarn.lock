@@ -6908,6 +6908,12 @@ react-router@^4.2.0:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
+react-s-alert@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-s-alert/-/react-s-alert-1.3.2.tgz#56d8453428d56f22a240eb014d2020d3f62ea984"
+  dependencies:
+    babel-runtime "^6.23.0"
+
 react-scripts@1.0.14:
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-1.0.14.tgz#70fe76c9beb67b136b953e875bdfe4ad78d410d1"

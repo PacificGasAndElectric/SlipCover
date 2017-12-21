@@ -136,6 +136,8 @@
 
 .edit-button {
   color: mediumblue;
+  size: 10px;
+  font: 20px;
 }
 
 .save-button {
