@@ -185,7 +185,7 @@ button:hover {
   display: flex;
   background-color: #00BCD4;
   align-self: center;
-  /* margin: 1% 1% 1% 1%; */
+  margin: 0% 0% 0% 0%;
   list-style: none;
   border-radius: 0.25rem;
   border: 2px dotted gray;
