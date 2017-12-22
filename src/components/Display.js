@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
+import Delete from 'material-ui/svg-icons/action/delete';
+import Download from 'material-ui/svg-icons/file/file-download';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -105,7 +107,7 @@ class Display extends Component {
       <Toolbar className="editBtnJsonList">
         <ToolbarGroup firstChild>
           {this.props.foundID === id ? (
-            <pre id="highlightID">{`Document ID: ${id}`}</pre>
+            <pre className="highlightID">{`Document ID: ${id}`}</pre>
           ) : (
             <pre>{`Document ID: ${id}`}</pre>
           )}
@@ -113,7 +115,11 @@ class Display extends Component {
         <ToolbarGroup>
           {/* <ToolbarTitle text="Options" /> */}
           <ToolbarSeparator />
-          <RaisedButton label="Edit" primary onClick={() => this.editBtn(id)} />
+          <RaisedButton
+            backgroundColor="#2161c6"
+            onClick={() => this.editBtn(id)}
+            label={<span className="edit-button">Edit</span>}
+          />
 
           <IconMenu
             iconButtonElement={
@@ -123,10 +129,15 @@ class Display extends Component {
             }
           >
             <MenuItem
+              leftIcon={<Delete />}
               primaryText="Remove"
               onClick={() => this.removeBtn(id, rev)}
             />
-            <MenuItem primaryText="Download" onClick={() => this.download()} />
+            <MenuItem
+              leftIcon={<Download />}
+              primaryText="Download"
+              onClick={() => this.download()}
+            />
           </IconMenu>
         </ToolbarGroup>
       </Toolbar>
@@ -136,20 +147,23 @@ class Display extends Component {
   renderForm() {
     const id = this.props.prop._id;
     const rev = this.props.prop._rev;
+
     return (
       <div className="editBtnJsonList">
         <textarea
           ref="newText"
-          id="enableTextArea"
+          className="enableTextArea"
           defaultValue={JSON.stringify(this.props.prop, null, 2)}
         />
         <RaisedButton
-          onClick={() => this.saveBtn(id, rev)}
+          backgroundColor="Green"
           label={<span className="save-button">Save</span>}
+          onClick={() => this.saveBtn(id, rev)}
         />
         <RaisedButton
-          onClick={() => this.cancelBtn(id)}
+          backgroundColor="Blue"
           label={<span className="cancel-button">Cancel</span>}
+          onClick={() => this.cancelBtn(id)}
         />
       </div>
     );

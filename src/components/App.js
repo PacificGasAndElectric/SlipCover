@@ -138,21 +138,23 @@ class App extends Component {
   async searchHandleSubmit(event) {
     const { storeData } = this.props;
     const id = storeData.searchDocument.trim(); // truncate spaces
-    const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
-    const isFound = idValidation(pos, event);
-    console.log('isFound: ', isFound);
-    if (isFound) {
-      event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
+    if (storeData.loadAllKeysSuccess.allKeys) {
+      const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
+      const isFound = idValidation(pos, event);
+      console.log('isFound: ', isFound);
+      if (isFound) {
+        event.preventDefault(); // make sure before 1st await for async func to avoid refreshing page
 
-      await this.props.foundDocument(id);
-      const rowsPerPage = manifest.rowsPerPage;
-      const currentPage = Math.ceil((pos + 1) / rowsPerPage);
+        await this.props.foundDocument(id);
+        const rowsPerPage = manifest.rowsPerPage;
+        const currentPage = Math.ceil((pos + 1) / rowsPerPage);
 
-      await this.props.updateCurrentPage(currentPage);
-      console.log('Key is found in pageNumber: ', currentPage);
-      this.getChannelFeed();
+        await this.props.updateCurrentPage(currentPage);
+        console.log('Key is found in pageNumber: ', currentPage);
+        this.getChannelFeed();
+      }
+      event.preventDefault();
     }
-    event.preventDefault();
   }
 
   render() {

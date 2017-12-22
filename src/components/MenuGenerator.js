@@ -1,3 +1,5 @@
+import RaisedButton from 'material-ui/RaisedButton';
+
 import React from 'react';
 import manifest from '../manifest.js';
 
@@ -28,18 +30,21 @@ export default ({
           ))}
         </select>
       </div>
+
       {/* search document id */}
       <div className="search">
-        <form className="inputBox" onSubmit={searchHandleSubmit}>
-          <input
-            className="label"
-            type="text"
-            name="name"
-            placeholder="Document ID"
-            onChange={searchHandleChange}
-          />
-          <input className="submit" type="submit" value="&#x1F50D; Search" />
-        </form>
+        <input
+          className="label"
+          type="text"
+          name="name"
+          placeholder="Document ID"
+          onChange={searchHandleChange}
+        />
+        <RaisedButton
+          backgroundColor="#4CAF50"
+          onClick={searchHandleSubmit}
+          label="Search"
+        />
       </div>
     </div>
   </div>
