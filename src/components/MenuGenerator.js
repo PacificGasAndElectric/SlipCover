@@ -11,7 +11,9 @@ export default ({
   searchHandleChange,
 }) => (
   <div className="menuBar">
-    <h1 className="header"> Sync-Gateway-SlipCover Open Source </h1>
+    <div className="headerMenu">
+      <h1 className="header"> Sync-Gateway-SlipCover Open Source </h1>
+    </div>
     <div className="menuRow">
       {/* Buckets dropdown menu */}
       <div className="bucket-box">

@@ -9,11 +9,9 @@
     "eslint-config-react-app": "^2.0.1",
     "eslint-plugin-flowtype": "^2.39.1",
     "lint": "^1.1.2",
-    "logger": "^0.0.1",
     "material-ui": "^0.20.0",
     "query-string": "^5.0.0",
     "react": "^16.0.0",
-    "react-bootstrap": "^0.31.5",
     "react-confirm-alert": "^1.0.8",
     "react-dom": "^16.1.1",
     "react-file-download": "^0.3.5",
@@ -23,10 +21,7 @@
     "react-s-alert": "^1.3.2",
     "react-scripts": "1.0.14",
     "react-tap-event-plugin": "^3.0.2",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6",
-    "redux-promise": "^0.5.3",
-    "redux-thunk": "^2.2.0"
+    "redux": "^3.7.2"
   },
   "scripts": {
     "prestart": "docker-compose up --build -d",
@@ -37,7 +32,7 @@
     "cover": "nyc npm run test",
     "watch:test": "npm run test -- --watch",
     "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
-    "prepush": "yarn test",    
+    "prepush": "yarn test",
     "eject": "react-scripts eject",
     "prettify": "eslint --ext .js --fix src/",
     "lint": "eslint ./src",
