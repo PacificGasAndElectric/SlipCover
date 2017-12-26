@@ -17,7 +17,7 @@ import updateJson from './fetches/updateJson'; // Fetch: update docuements
 import '../App.css';
 import {
   foundDocument,
-  selectBucket,
+  selectedBucket,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDataSuccess,
@@ -52,14 +52,13 @@ class App extends Component {
   componentWillMount() {
     this.props.updateStatus(false);
     this.props.updateSaveButton(false);
-    this.props.selectBucket('--Select Buckets--', false);
     this.props.updateCurrentPage(1);
     this.props.progressBar(0);
   }
 
   async getAllAvailableKeys() {
     const trueResult = await getAllAvailableKeys(
-      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.selectedBucket,
     ); // GET fetch
 
     if (trueResult.includes('bad keys fetch:')) {
@@ -75,7 +74,7 @@ class App extends Component {
 
   async getChannelFeed() {
     const trueResult = await getChannelFeed(
-      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.selectedBucket,
       this.props.storeData.loadAllKeysSuccess.allKeys,
       this.props.storeData.updateCurrentPage,
     ); // GET fetch
@@ -88,7 +87,7 @@ class App extends Component {
 
   async removeJson(id, rev) {
     const trueResult = await removeJson(
-      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.selectedBucket,
       this.props.storeData.dataReducer.data,
       id,
       rev,
@@ -102,7 +101,7 @@ class App extends Component {
 
   async updateJson(newDoc, id, rev) {
     const trueResult = await updateJson(
-      this.props.storeData.selectBucket.bucket,
+      this.props.storeData.selectedBucket,
       newDoc,
       id,
       rev,
@@ -117,7 +116,7 @@ class App extends Component {
   }
 
   async bucketHandleChecked(event) {
-    await this.props.selectBucket(event.target.value, true);
+    await this.props.selectedBucket(event.target.value);
     this.getAllAvailableKeys();
   }
 
@@ -165,8 +164,7 @@ class App extends Component {
           <LinearProgress />
           <MenuGenerator
             bucketHandleChecked={this.bucketHandleChecked}
-            bucketDefaultKey={storeData.selectBucket.bucketDefaultKey}
-            selectBucket={storeData.selectBucket.bucket}
+            selectedBucket={storeData.selectedBucket}
             searchHandleSubmit={this.searchHandleSubmit}
             searchHandleChange={this.searchHandleChange}
           />
@@ -190,7 +188,7 @@ class App extends Component {
           <div>
             {storeData.dataReducer && storeData.dataReducer.data
               ? storeData.dataReducer.data.map(object => {
-                  if (storeData.selectBucket.bucket) {
+                  if (storeData.selectedBucket) {
                     return (
                       <Display
                         key={object._id}
@@ -222,7 +220,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   foundDocument,
-  selectBucket,
+  selectedBucket,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDataSuccess,

@@ -58,10 +58,9 @@ export const saveDocumentFailed = error => ({
   error,
 });
 
-export const selectBucket = (bucket, bucketDefaultKey) => ({
+export const selectedBucket = bucket => ({
   type: SELECT_BUCKET,
   bucket,
-  bucketDefaultKey,
 });
 
 export const updateCurrentPage = currentPage => ({

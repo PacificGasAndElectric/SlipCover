@@ -18,7 +18,7 @@ import {
   PROGRESS_BAR,
 } from '../constants';
 import {
-  selectBucket,
+  selectedBucket,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDataSuccess,
@@ -37,10 +37,9 @@ import {
 } from './index';
 
 test('select a bucket - action', t => {
-  t.deepEqual(selectBucket('beer-sample', false), {
+  t.deepEqual(selectedBucket('beer-sample'), {
     type: SELECT_BUCKET,
     bucket: 'beer-sample',
-    bucketDefaultKey: false,
   });
 });
 

@@ -19,7 +19,6 @@ import {
   removeDocument,
   updateStatus,
   updateSaveButton,
-  selectBucket,
 } from '../actions';
 import jsonValidation from './validation/jsonValidation.js';
 // import Card from './Card';
@@ -190,5 +189,4 @@ export default connect(mapStateToProps, {
   removeDocument,
   updateStatus,
   updateSaveButton,
-  selectBucket,
 })(Display);

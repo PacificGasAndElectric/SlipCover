@@ -30,13 +30,10 @@ export const foundDocument = (state = '', { type, id }) => {
   }
 };
 
-export const selectBucket = (
-  state = [],
-  { type, bucket, bucketDefaultKey },
-) => {
+export const selectedBucket = (state = '', { type, bucket }) => {
   switch (type) {
     case SELECT_BUCKET:
-      return { ...state, bucket, bucketDefaultKey };
+      return bucket;
     default:
       return state;
   }
@@ -154,7 +151,7 @@ export const dataReducer = (state = [], action) => {
 
 export default combineReducers({
   foundDocument,
-  selectBucket,
+  selectedBucket,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDatafailed,

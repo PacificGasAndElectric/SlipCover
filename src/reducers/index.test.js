@@ -18,7 +18,7 @@ import {
   PROGRESS_BAR,
 } from '../constants';
 import {
-  selectBucket,
+  selectedBucket,
   loadAllKeysSuccess,
   loadAllKeysFailed,
   loadDatafailed,
@@ -37,13 +37,9 @@ test('should set the current bucket', t => {
   const action = {
     type: SELECT_BUCKET,
     bucket: 'beer-sample',
-    bucketDefaultKey: false,
   };
-  const result = {
-    bucket: 'beer-sample',
-    bucketDefaultKey: false,
-  };
-  t.deepEqual(selectBucket(state, action), result);
+  const result = 'beer-sample';
+  t.deepEqual(selectedBucket(state, action), result);
 });
 
 test('all keys should be loaded', t => {

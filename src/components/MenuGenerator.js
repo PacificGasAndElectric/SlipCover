@@ -5,8 +5,7 @@ import manifest from '../manifest.js';
 
 export default ({
   bucketHandleChecked,
-  bucketDefaultKey,
-  selectBucket,
+  selectedBucket,
   searchHandleSubmit,
   searchHandleChange,
 }) => (
@@ -22,9 +21,9 @@ export default ({
           onChange={e => {
             bucketHandleChecked(e);
           }}
-          value={selectBucket}
+          value={selectedBucket}
         >
-          <option disabled={bucketDefaultKey}>-- Select Buckets --</option>
+          <option>-- Select Buckets --</option>
           {manifest.bucket.map(m => (
             <option key={m.toString()} value={m}>
               {m}
