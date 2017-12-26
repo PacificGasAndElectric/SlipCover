@@ -7,7 +7,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from './LinearProgress';
 import idValidation from './validation/idValidation.js';
-import Display from './Display.js';
+import ListDocuments from './ListDocuments.js';
 import MenuGenerator from './MenuGenerator.js';
 import getAllAvailableKeys from './fetches/getAllAvailableKeys'; // Fetch: get all keys
 import getChannelFeed from './fetches/getChannelFeed'; // Fetch: get documents based on keys
@@ -190,7 +190,7 @@ class App extends Component {
               ? storeData.dataReducer.data.map(object => {
                   if (storeData.selectedBucket) {
                     return (
-                      <Display
+                      <ListDocuments
                         key={object._id}
                         index={object._id}
                         prop={object}

@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-import RenderNormal from './RenderNormal.js';
+import EditDocument from './EditDocument.js';
 
 import {
   saveDocument,
@@ -93,9 +93,34 @@ class Display extends Component {
     fileDownload(JSON.stringify(this.props.prop, null, 2), 'filename.json');
   }
 
-  renderNormal() {
+  render() {
+    if (this.props.storeData.dataReducer.status === true) {
+      if (this.props.index === this.props.storeData.dataReducer.id) {
+        return (
+          <div className="editBtnJsonList">
+            <textarea
+              ref="newText"
+              className="enableTextArea"
+              defaultValue={JSON.stringify(this.props.prop, null, 2)}
+            />
+            <RaisedButton
+              backgroundColor="Green"
+              label={<span className="save-button">Save</span>}
+              onClick={() =>
+                this.saveBtn(this.props.prop._id, this.props.prop._rev)
+              }
+            />
+            <RaisedButton
+              backgroundColor="Blue"
+              label={<span className="cancel-button">Cancel</span>}
+              onClick={() => this.cancelBtn(this.props.prop._id)}
+            />
+          </div>
+        );
+      }
+    }
     return (
-      <RenderNormal
+      <EditDocument
         id={this.props.prop._id}
         rev={this.props.prop._rev}
         foundID={this.props.foundID}
@@ -104,40 +129,6 @@ class Display extends Component {
         download={this.download}
       />
     );
-  }
-
-  renderForm() {
-    const id = this.props.prop._id;
-    const rev = this.props.prop._rev;
-
-    return (
-      <div className="editBtnJsonList">
-        <textarea
-          ref="newText"
-          className="enableTextArea"
-          defaultValue={JSON.stringify(this.props.prop, null, 2)}
-        />
-        <RaisedButton
-          backgroundColor="Green"
-          label={<span className="save-button">Save</span>}
-          onClick={() => this.saveBtn(id, rev)}
-        />
-        <RaisedButton
-          backgroundColor="Blue"
-          label={<span className="cancel-button">Cancel</span>}
-          onClick={() => this.cancelBtn(id)}
-        />
-      </div>
-    );
-  }
-
-  render() {
-    if (this.props.storeData.dataReducer.status === true) {
-      if (this.props.index === this.props.storeData.dataReducer.id) {
-        return this.renderForm();
-      }
-    }
-    return this.renderNormal();
   }
 }
 
