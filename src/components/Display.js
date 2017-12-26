@@ -3,16 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import { Toolbar, ToolbarGroup, ToolbarSeparator } from 'material-ui/Toolbar';
-import Delete from 'material-ui/svg-icons/action/delete';
-import Download from 'material-ui/svg-icons/file/file-download';
-
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
+import RenderNormal from './RenderNormal.js';
 
 import {
   saveDocument,
@@ -100,46 +94,15 @@ class Display extends Component {
   }
 
   renderNormal() {
-    const id = this.props.prop._id;
-    const rev = this.props.prop._rev;
     return (
-      <Toolbar className="editBtnJsonList">
-        <ToolbarGroup firstChild>
-          {this.props.foundID === id ? (
-            <pre className="highlightID">{`Document ID: ${id}`}</pre>
-          ) : (
-            <pre>{`Document ID: ${id}`}</pre>
-          )}
-        </ToolbarGroup>
-        <ToolbarGroup>
-          {/* <ToolbarTitle text="Options" /> */}
-          <ToolbarSeparator />
-          <RaisedButton
-            backgroundColor="#2161c6"
-            onClick={() => this.editBtn(id)}
-            label={<span className="edit-button">Edit</span>}
-          />
-
-          <IconMenu
-            iconButtonElement={
-              <IconButton touch>
-                <NavigationExpandMoreIcon />
-              </IconButton>
-            }
-          >
-            <MenuItem
-              leftIcon={<Delete />}
-              primaryText="Remove"
-              onClick={() => this.removeBtn(id, rev)}
-            />
-            <MenuItem
-              leftIcon={<Download />}
-              primaryText="Download"
-              onClick={() => this.download()}
-            />
-          </IconMenu>
-        </ToolbarGroup>
-      </Toolbar>
+      <RenderNormal
+        id={this.props.prop._id}
+        rev={this.props.prop._rev}
+        foundID={this.props.foundID}
+        editBtn={this.editBtn}
+        removeBtn={this.removeBtn}
+        download={this.download}
+      />
     );
   }
 

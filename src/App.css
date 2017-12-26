@@ -116,6 +116,19 @@
   background-color: green;
 }
 
+.editBtnJsonListColorful {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  outline: none;
+  resize: none;
+  margin: 0px 0px 3px 0px;
+  border: 5px solid #dddddd;
+  width: 100%;
+  border: 5px solid blue;  
+}
+
 .editBtnJsonList {
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -123,14 +136,9 @@
   -o-transition: all 0.3s ease-in-out;
   outline: none;
   resize: none;
-  /* padding: 1% 1% 1% 1%; */
   margin: 0px 0px 3px 0px;
   border: 5px solid #dddddd;
   width: 100%;
-}
-
-.highlightID {
-  border: 5px solid blue;
 }
 
 .enableTextArea {
