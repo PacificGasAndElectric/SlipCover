@@ -11,7 +11,7 @@ import {
   REMOVE_DOCUMENT_FAILED,
   SAVE_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
-  SELECT_BUCKET,
+  SELECTED_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
@@ -32,17 +32,17 @@ export const foundDocument = (state = '', { type, id }) => {
 
 export const selectedBucket = (state = '', { type, bucket }) => {
   switch (type) {
-    case SELECT_BUCKET:
+    case SELECTED_BUCKET:
       return bucket;
     default:
       return state;
   }
 };
 
-export const loadAllKeysSuccess = (state = {}, { type, allKeys }) => {
+export const loadAllKeysSuccess = (state = [], { type, allKeys }) => {
   switch (type) {
     case LOAD_ALLKEYS_SUCCESS:
-      return { ...state, allKeys };
+      return allKeys;
     default:
       return state;
   }

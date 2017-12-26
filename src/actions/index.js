@@ -9,7 +9,7 @@ import {
   REMOVE_DOCUMENT_FAILED,
   SAVE_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
-  SELECT_BUCKET,
+  SELECTED_BUCKET,
   UPDATE_CURRENT_PAGE,
   UPDATE_PAGE_COUNT,
   SEARCH_DOCUMENT,
@@ -59,7 +59,7 @@ export const saveDocumentFailed = error => ({
 });
 
 export const selectedBucket = bucket => ({
-  type: SELECT_BUCKET,
+  type: SELECTED_BUCKET,
   bucket,
 });
 

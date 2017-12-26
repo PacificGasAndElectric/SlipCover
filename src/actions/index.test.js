@@ -1,6 +1,6 @@
 import test from 'ava';
 import {
-  SELECT_BUCKET,
+  SELECTED_BUCKET,
   LOAD_ALLKEYS_SUCCESS,
   LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
@@ -38,7 +38,7 @@ import {
 
 test('select a bucket - action', t => {
   t.deepEqual(selectedBucket('beer-sample'), {
-    type: SELECT_BUCKET,
+    type: SELECTED_BUCKET,
     bucket: 'beer-sample',
   });
 });

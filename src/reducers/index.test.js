@@ -1,6 +1,6 @@
 import test from 'ava';
 import {
-  SELECT_BUCKET,
+  SELECTED_BUCKET,
   LOAD_ALLKEYS_SUCCESS,
   LOAD_ALLKEYS_FAILED,
   LOAD_DATA_SUCCESS,
@@ -35,7 +35,7 @@ import {
 test('should set the current bucket', t => {
   const state = [];
   const action = {
-    type: SELECT_BUCKET,
+    type: SELECTED_BUCKET,
     bucket: 'beer-sample',
   };
   const result = 'beer-sample';
@@ -49,7 +49,7 @@ test('all keys should be loaded', t => {
     type: LOAD_ALLKEYS_SUCCESS,
     allKeys: arrOfKeys,
   };
-  const result = { allKeys: arrOfKeys };
+  const result = arrOfKeys;
   t.deepEqual(loadAllKeysSuccess(state, action), result);
 });
 

@@ -75,7 +75,7 @@ class App extends Component {
   async getChannelFeed() {
     const trueResult = await getChannelFeed(
       this.props.storeData.selectedBucket,
-      this.props.storeData.loadAllKeysSuccess.allKeys,
+      this.props.storeData.loadAllKeysSuccess,
       this.props.storeData.updateCurrentPage,
     ); // GET fetch
     if (trueResult.includes('bad data fetch:')) {
@@ -137,8 +137,8 @@ class App extends Component {
   async searchHandleSubmit(event) {
     const { storeData } = this.props;
     const id = storeData.searchDocument.trim(); // truncate spaces
-    if (storeData.loadAllKeysSuccess.allKeys) {
-      const pos = storeData.loadAllKeysSuccess.allKeys.indexOf(id);
+    if (storeData.loadAllKeysSuccess) {
+      const pos = storeData.loadAllKeysSuccess.indexOf(id);
       const isFound = idValidation(pos, event);
       console.log('isFound: ', isFound);
       if (isFound) {
