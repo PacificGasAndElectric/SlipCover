@@ -3,9 +3,11 @@
 
 This project will give you access to interact with Sync-Gateway locally using Docker Container. 
 
-![readMode](readMode.png)
 
-![editMode](editMode.png)
+<img src=readMode.png width=50%/> 
+
+<img src= editMode.png width=50%/>
+
 
 ## Installation
 
