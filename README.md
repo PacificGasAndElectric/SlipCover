@@ -69,8 +69,26 @@ For direct contributions, please fork the repository and file a pull request. If
 If you want to use this project with your own Sync-Gateway:
 
 - modify `manifest.js` to add your own buckets.
-- modify `.env` to change your end point.
-- Remove `docker compose` from the project.
+
+```
+bucket: ['beer-sample'],
+```
+
+- Modify `.env` to change your end point.
+
+
+```
+REACT_APP_SYNC_GATEWAY="http://localhost:4984"
+```
+
+- Remove the scripts from `package.json`.
+
+```javascript
+"prestart": "docker-compose up --build -d",
+"docker-down": "docker-compose down",
+```
+
+
 - Bear in mind that the default behavior of fetch is to ignore the Set-Cookie header completely. To opt into accepting cookies from the server, you must use the credentials option.
 
 For [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) requests, use the "include" value to allow sending credentials to
