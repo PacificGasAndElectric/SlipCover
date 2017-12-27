@@ -42,13 +42,13 @@ yarn run cover
 -  Ability to `view, edit, remove, download` a document from Sync-Gateway.
 -  Ability to search for a specific document.
 
-<img src=readMode.png width=70% /> 
+<img src= ./screenshots/readMode.png width=70% /> 
 
 
 ## Edit Mode
 - Ability to save the changes into Sync-Gateway.
 
-<img src= editMode.png width=70% />
+<img src= ./screenshots/editMode.png width=70% />
 
 ## Contributing
 
