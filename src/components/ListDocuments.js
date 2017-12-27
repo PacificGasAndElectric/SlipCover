@@ -22,7 +22,7 @@ import jsonValidation from './validation/jsonValidation.js';
 const fileDownload = require('react-file-download');
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
-class Display extends Component {
+class ListDocuments extends Component {
   static get propTypes() {
     return {
       prop: PropTypes.object.isRequired,
@@ -146,4 +146,4 @@ export default connect(mapStateToProps, {
   removeDocument,
   updateStatus,
   updateSaveButton,
-})(Display);
+})(ListDocuments);
