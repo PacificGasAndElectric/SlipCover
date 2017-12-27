@@ -29,7 +29,8 @@ import {
   updatePageCount,
   foundDocument,
   searchDocument,
-  dataReducer, // saveDocument, tempDocument, removeDocument, loadDataSuccess, updateStatus, updateSaveButton
+  tempDocument,
+  dataReducer, // saveDocument, removeDocument, loadDataSuccess, updateStatus, updateSaveButton
   progressBar,
 } from './index';
 
@@ -167,10 +168,8 @@ test('temporary document should be stored per onChange event', t => {
     type: TEMP_DOCUMENT,
     tempDoc: doc,
   };
-  const result = {
-    tempDoc: doc,
-  };
-  t.deepEqual(dataReducer(state, action), result);
+  const result = doc;
+  t.deepEqual(tempDocument(state, action), result);
 });
 
 test('fail saving document while fetching', t => {

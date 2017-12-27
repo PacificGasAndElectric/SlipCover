@@ -12,7 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 export default ({ id, rev, foundID, editBtn, removeBtn, download }) => (
   <div>
     {foundID === id ? (
-      // color around the box if id found
+      // editBtnJsonListColorful: contains color border
       <Toolbar className="editBtnJsonListColorful">
         <ToolbarGroup firstChild>
           <pre>{`Document ID: ${id}`}</pre>
@@ -45,7 +45,7 @@ export default ({ id, rev, foundID, editBtn, removeBtn, download }) => (
         </ToolbarGroup>
       </Toolbar>
     ) : (
-      // NO color around the box
+      // editBtnJsonList: contains NO color border
       <Toolbar className="editBtnJsonList">
         <ToolbarGroup firstChild>
           <pre>{`Document ID: ${id}`}</pre>

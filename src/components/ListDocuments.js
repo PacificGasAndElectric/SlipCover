@@ -46,20 +46,19 @@ class Display extends Component {
 
   editBtn(id) {
     const status = true;
+    this.props.tempDocument(''); // reset it to empty in store
     this.props.updateStatus(status, id);
   }
 
   cancelBtn(id) {
     const status = false;
+    this.props.tempDocument(''); // reset it to empty in store
     this.props.updateStatus(status, id);
   }
 
   saveBtn(id, rev) {
-    const editedDoc = JSON.stringify(
-      this.props.storeData.dataReducer.tempDoc,
-      null,
-      2,
-    );
+    const editedDoc = this.props.storeData.tempDocument;
+
     const status = false;
     const isJSON = jsonValidation(editedDoc);
 
@@ -102,14 +101,14 @@ class Display extends Component {
 
   // push the changes into the store
   documentHandleChange(e) {
-    const val = JSON.parse(e.target.value);
-    this.props.tempDocument(val);
+    this.props.tempDocument(e.target.value);
     e.preventDefault();
   }
 
   render() {
-    if (this.props.storeData.dataReducer.status === true) {
-      if (this.props.index === this.props.storeData.dataReducer.id) {
+    const { storeData } = this.props;
+    if (storeData.dataReducer.status === true) {
+      if (this.props.index === storeData.dataReducer.id) {
         return (
           <EditDocForm
             id={this.props.prop._id}

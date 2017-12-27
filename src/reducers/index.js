@@ -121,6 +121,15 @@ export const progressBar = (state = [], { type, timer }) => {
   }
 };
 
+export const tempDocument = (state = '', { type, tempDoc }) => {
+  switch (type) {
+    case TEMP_DOCUMENT:
+      return tempDoc;
+    default:
+      return state;
+  }
+};
+
 export const dataReducer = (state = [], action) => {
   switch (action.type) {
     case LOAD_DATA_SUCCESS:
@@ -132,8 +141,6 @@ export const dataReducer = (state = [], action) => {
           ele => (ele._id === action.id ? action.newDoc : ele),
         ),
       };
-    case TEMP_DOCUMENT:
-      return { ...state, tempDoc: action.tempDoc };
     case REMOVE_DOCUMENT:
       return {
         ...state,
@@ -163,6 +170,7 @@ export default combineReducers({
   updateCurrentPage,
   updatePageCount,
   searchDocument,
+  tempDocument,
   dataReducer,
   progressBar,
 });
