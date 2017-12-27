@@ -6,6 +6,7 @@ import {
   LOAD_DATA_SUCCESS,
   LOAD_DATA_FAILED,
   SAVE_DOCUMENT,
+  TEMP_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
   REMOVE_DOCUMENT,
   REMOVE_DOCUMENT_FAILED,
@@ -24,6 +25,7 @@ import {
   loadDataSuccess,
   loadDatafailed,
   saveDocument,
+  tempDocument,
   saveDocumentFailed,
   removeDocument,
   removeDocumentFailed,
@@ -103,6 +105,18 @@ test('save document - action', t => {
     id,
     newDoc,
     oldDoc,
+  });
+});
+
+test('temporary edited document - action', t => {
+  const doc = {
+    _id: '123456789',
+    description: 'Updated test',
+    name: 'Ibrahim Al Sinafi',
+  };
+  t.deepEqual(tempDocument(doc), {
+    type: TEMP_DOCUMENT,
+    tempDoc: doc,
   });
 });
 

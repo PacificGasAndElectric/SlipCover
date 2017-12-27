@@ -10,6 +10,7 @@ import {
   REMOVE_DOCUMENT,
   REMOVE_DOCUMENT_FAILED,
   SAVE_DOCUMENT,
+  TEMP_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
   SELECTED_BUCKET,
   UPDATE_CURRENT_PAGE,
@@ -131,6 +132,8 @@ export const dataReducer = (state = [], action) => {
           ele => (ele._id === action.id ? action.newDoc : ele),
         ),
       };
+    case TEMP_DOCUMENT:
+      return { ...state, tempDoc: action.tempDoc };
     case REMOVE_DOCUMENT:
       return {
         ...state,

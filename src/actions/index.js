@@ -8,6 +8,7 @@ import {
   REMOVE_DOCUMENT,
   REMOVE_DOCUMENT_FAILED,
   SAVE_DOCUMENT,
+  TEMP_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
   SELECTED_BUCKET,
   UPDATE_CURRENT_PAGE,
@@ -51,6 +52,11 @@ export const saveDocument = (id, newDoc, oldDoc) => ({
   id,
   newDoc,
   oldDoc,
+});
+
+export const tempDocument = tempDoc => ({
+  type: TEMP_DOCUMENT,
+  tempDoc,
 });
 
 export const saveDocumentFailed = error => ({

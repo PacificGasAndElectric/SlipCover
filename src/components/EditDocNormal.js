@@ -1,7 +1,3 @@
-// import React from 'react';
-
-// export default () => <div> Hello World </div>;
-
 import React from 'react';
 
 import IconMenu from 'material-ui/IconMenu';
@@ -28,7 +24,6 @@ export default ({ id, rev, foundID, editBtn, removeBtn, download }) => (
             onClick={() => editBtn(id)}
             label={<span className="edit-button">Edit</span>}
           />
-
           <IconMenu
             iconButtonElement={
               <IconButton touch>
@@ -62,7 +57,6 @@ export default ({ id, rev, foundID, editBtn, removeBtn, download }) => (
             onClick={() => editBtn(id)}
             label={<span className="edit-button">Edit</span>}
           />
-
           <IconMenu
             iconButtonElement={
               <IconButton touch>

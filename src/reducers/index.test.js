@@ -6,6 +6,7 @@ import {
   LOAD_DATA_SUCCESS,
   LOAD_DATA_FAILED,
   SAVE_DOCUMENT,
+  TEMP_DOCUMENT,
   SAVE_DOCUMENT_FAILED,
   REMOVE_DOCUMENT,
   REMOVE_DOCUMENT_FAILED,
@@ -28,7 +29,7 @@ import {
   updatePageCount,
   foundDocument,
   searchDocument,
-  dataReducer, // saveDocument, removeDocument, loadDataSuccess, updateStatus, updateSaveButton
+  dataReducer, // saveDocument, tempDocument, removeDocument, loadDataSuccess, updateStatus, updateSaveButton
   progressBar,
 } from './index';
 
@@ -153,6 +154,23 @@ test('new document should be saved', t => {
     data: updatedData,
   };
   t.deepEqual(dataReducer(state, action), result); // saveDocument
+});
+
+test('temporary document should be stored per onChange event', t => {
+  const state = [];
+  const doc = {
+    _id: '123456789',
+    description: 'Updated test',
+    name: 'Ibrahim Al Sinafi',
+  };
+  const action = {
+    type: TEMP_DOCUMENT,
+    tempDoc: doc,
+  };
+  const result = {
+    tempDoc: doc,
+  };
+  t.deepEqual(dataReducer(state, action), result);
 });
 
 test('fail saving document while fetching', t => {
