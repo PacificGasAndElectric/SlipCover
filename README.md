@@ -1,6 +1,6 @@
 # Sync-Gateway-SlipCover open source
 
--  Quick and easy access to interact with [Sync-Gateway] (https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
+-  Quick and easy access to interact with [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
 -  More features implimented 
 `view,Edit,Remove,Save,Eownlaod,Search`  
 -  User Friendly 
@@ -28,7 +28,7 @@ yarn run cover
 
 ## Details
 
-- [Docker Compose] (https://docs.docker.com/compose/) manages running [Sync-Gateway] (https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) and [Couchbase Server] (https://www.couchbase.com/sign-in) locally.
+- [Docker Compose](https://docs.docker.com/compose/) manages running [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
 
 - The data will be populated once the docker finish uploading the bucket "beer-sample." The first time it runs, tt takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all documents are uploaded.
 
