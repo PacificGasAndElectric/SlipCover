@@ -4,13 +4,15 @@ import 'react-s-alert/dist/s-alert-default.css';
 import * as queryString from 'query-string';
 import manifest from '../../manifest.js';
 
+// fetch certain number of documents per page based
+// on certain number of ID's
 export default async (selectedBucket, allKeys, currentPage) => {
   console.log(` CURRENT PAGE: ${currentPage}`);
-
   const rowsPerPage = manifest.rowsPerPage;
   const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = currentPage * rowsPerPage;
   let trueResult = '';
+
   try {
     const syncgatewayUrl = manifest.syncgatewayUrl;
 

@@ -4,6 +4,7 @@ import 'react-s-alert/dist/s-alert-default.css';
 import * as queryString from 'query-string';
 import manifest from '../../manifest.js';
 
+// fetch all ID's of a specific bucket to manage the pagination
 export default async selectedBucket => {
   let trueResult = '';
   try {

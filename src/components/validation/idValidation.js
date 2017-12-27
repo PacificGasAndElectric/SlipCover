@@ -1,6 +1,7 @@
 import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 
+// check to see if a particular document was found
 export default (pos, event) => {
   if (pos !== -1) {
     event.persist();

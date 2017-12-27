@@ -5,6 +5,7 @@ import manifest from '../../manifest.js';
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 
+// remove a document from the specified bucket
 export default async (selectedBucket, arr, id, rev) => {
   let trueResult = '';
   try {

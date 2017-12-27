@@ -6,6 +6,7 @@ import manifest from '../../manifest.js';
 
 /* eslint no-underscore-dangle: [2, { "allow": ["_id", "_rev"] }] */
 
+// update the changes to a document in the specified bucket
 export default async (selectedBucket, newDoc, id, rev) => {
   let doc = '';
   let trueResult = '';

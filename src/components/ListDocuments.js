@@ -88,8 +88,8 @@ class Display extends Component {
       confirmLabel: 'Confirm', // Text button confirm
       cancelLabel: 'Cancel', // Text button cancel
       onConfirm: () => {
-        this.props.removeJson(id, rev);
-        this.props.removeDocument(id);
+        this.props.removeJson(id, rev); // request for DELETE fetch
+        this.props.removeDocument(id); // remove doc in store
       },
       onCancel: () => {}, // Action after Cancel
     });
@@ -99,7 +99,7 @@ class Display extends Component {
     fileDownload(JSON.stringify(this.props.prop, null, 2), 'filename.json');
   }
 
-  // push the changes into the store
+  // push the changes into the store before updating doc
   documentHandleChange(e) {
     this.props.tempDocument(e.target.value);
     e.preventDefault();
