@@ -9,20 +9,30 @@
 
 ## Installation
 
-```sh
+```
 yarn isntall
 ```
 
 
 ## To run the project
 
-```sh
+```
 yarn start
+```
+
+## To stop the project
+```
+ctr + c
+```
+and then
+
+```
+yarn run docker-down
 ```
 
 ## To run the test coverage
 
-```sh
+```
 yarn run cover
 ```
 
