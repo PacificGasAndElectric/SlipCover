@@ -1,9 +1,9 @@
 # Sync-Gateway-SlipCover open source
 
 -  Quick and easy access to interact with [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
--  More features implimented 
+-  More features implimented.
 `view,Edit,Remove,Save,Eownlaod,Search`  
--  User Friendly 
+-  User Friendly.
 
 
 
@@ -26,6 +26,10 @@ yarn start
 yarn run cover
 ```
 
+##Dependencies
+- Langage: [React-Redux](https://redux.js.org/docs/basics/UsageWithReact.html).
+- Frameworks: [Material-UI](http://www.material-ui.com/#/components/app-bar)
+
 ## Details
 
 - [Docker Compose](https://docs.docker.com/compose/) manages running [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
@@ -34,25 +38,30 @@ yarn run cover
 
 
 ## View Mode
--  `The main page` shows a list of documents ID's. 
--  `Dropdown Menu` to select a buck.
--  `Pagination` to navigate through documents.
--  `Edit` to view/edit entire document. 
--  `MenuItem` to delete or download a document.
--  `Search` to search for a specific document.
+-  It shows a list of documents ID's.
+-  Ability to `view, edit, remove, download` a document from Sync-Gateway.
+-  Ability to search for a specific document.
 
 <img src=readMode.png width=70% /> 
 
 
 ## Edit Mode
-- `Save` to reflect the changes into Sync-Gateway. 
+- Ability to save the changes into Sync-Gateway.
 
 <img src= editMode.png width=70% />
 
 ## Contributing
+
+All contributions and suggestions are welcome!
+
+For suggested improvements, please [file an issue](https://github.com/PGEDigitalCatalyst/SlipCover/issues).
+
+For direct contributions, please fork the repository and file a pull request. If you never created a pull request before, welcome 🎉 😄 [Here is a great tutorial](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) on how to send one.
 
 1. Fork it (<https://github.com/PGEDigitalCatalyst/SlipCover/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
+
+
