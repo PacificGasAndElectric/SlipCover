@@ -2,7 +2,7 @@
 
 -  Quick and easy access to interact with [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
 -  More features implimented.
-`view,Edit,Remove,Save,Eownlaod,Search`  
+`view,Edit,Remove,Save,Downlaod,Search`  
 -  User Friendly.
 
 
@@ -52,7 +52,7 @@ yarn run cover
 -  Ability to `view, edit, remove, download` a document from Sync-Gateway.
 -  Ability to search for a specific document.
 
-<img src= ./screenshots/readMode.png width=70% /> 
+<img src=./screenshots/readMode.png width=70% /> 
 
 
 ## Edit Mode
