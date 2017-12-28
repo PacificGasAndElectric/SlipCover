@@ -23,7 +23,7 @@ export default ({
           }}
           value={selectedBucket}
         >
-          <option>-- Select Buckets --</option>
+          <option>-- Select Bucket --</option>
           {manifest.bucket.map(m => (
             <option key={m.toString()} value={m}>
               {m}
