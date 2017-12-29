@@ -117,7 +117,12 @@ class App extends Component {
 
   async bucketHandleChecked(event) {
     await this.props.selectedBucket(event.target.value);
-    this.getAllAvailableKeys();
+    if (
+      this.props.storeData.selectedBucket !== '' &&
+      this.props.storeData.selectedBucket !== '-- Select Bucket --'
+    ) {
+      this.getAllAvailableKeys();
+    }
   }
 
   //eslint-disable-next-line
