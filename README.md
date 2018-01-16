@@ -44,7 +44,7 @@ yarn run cover
 
 - [Docker Compose](https://docs.docker.com/compose/) manages running [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
 
-- The data will be populated once the docker finish uploading the bucket "beer-sample." The first time it runs, tt takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all documents are uploaded.
+- The data will be populated once the docker finish uploading the bucket "beer-sample." The first time it runs, it takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all documents are uploaded.
 
 
 ## View Mode
