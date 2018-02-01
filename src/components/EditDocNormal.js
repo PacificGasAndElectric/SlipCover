@@ -72,7 +72,7 @@ export default ({ id, rev, foundID, editBtn, removeBtn, download }) => (
             <MenuItem
               leftIcon={<Download />}
               primaryText="Download"
-              onClick={() => download}
+              onClick={() => download()}
             />
           </IconMenu>
         </ToolbarGroup>
