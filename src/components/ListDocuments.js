@@ -29,7 +29,7 @@ class ListDocuments extends Component {
       index: PropTypes.string.isRequired,
       removeJson: PropTypes.func.isRequired,
       updateJson: PropTypes.func.isRequired,
-      //eslint-disable-next-line
+      // eslint-disable-next-line
       foundID: PropTypes.string,
     };
   }

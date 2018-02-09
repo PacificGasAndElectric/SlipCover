@@ -125,7 +125,7 @@ class App extends Component {
     }
   }
 
-  //eslint-disable-next-line
+  // eslint-disable-next-line
   async handlePageClick(data) {
     const currentPage = data.selected + 1;
     await this.props.updateCurrentPage(currentPage);

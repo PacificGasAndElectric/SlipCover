@@ -66,7 +66,7 @@ All contributions and suggestions are welcome!
 
 For suggested improvements, please [file an issue](https://github.com/PGEDigitalCatalyst/SlipCover/issues).
 
-For direct contributions, please fork the repository and file a pull request. If you never created a pull request before, welcome 🎉 😄 [Here is a great tutorial](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github) on how to send one.
+For direct contributions, please fork the repository and file a pull request. If you never created a pull request before, watch these quick tutorials [here](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
 1. Fork it (<https://github.com/PGEDigitalCatalyst/SlipCover/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
