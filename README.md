@@ -36,7 +36,7 @@ yarn run docker-down
 yarn run cover
 ```
 
-##Dependencies
+## Dependencies
 - Langage: [React-Redux](https://redux.js.org/docs/basics/UsageWithReact.html).
 - Frameworks: [Material-UI](http://www.material-ui.com/#/components/app-bar)
 

@@ -1,4 +1,4 @@
-FROM couchbase/server:enterprise-5.0.0
+FROM couchbase/server:latest
 
 COPY configuration.sh /opt/couchbase
 
