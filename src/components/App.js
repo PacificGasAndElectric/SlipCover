@@ -56,6 +56,11 @@ class App extends Component {
     this.props.progressBar(0);
   }
 
+  /* 
+    This function will grab ONLY documents ID's
+      - Put all documents ID's in store
+      - Determine page numbers and store them for pagination purpose
+  */
   async getAllAvailableKeys() {
     const trueResult = await getAllAvailableKeys(
       this.props.storeData.selectedBucket,
@@ -72,6 +77,10 @@ class App extends Component {
     }
   }
 
+  /*
+    This function will grab number of documents per page based on available documents ID's
+    Update pagination 'rowsPerPage'
+  */
   async getChannelFeed() {
     const trueResult = await getChannelFeed(
       this.props.storeData.selectedBucket,
@@ -85,6 +94,11 @@ class App extends Component {
     }
   }
 
+  /*
+    This function will remove a specific document
+      - Update documents ID's
+      - Update pagination
+  */
   async removeJson(id, rev) {
     const trueResult = await removeJson(
       this.props.storeData.selectedBucket,
@@ -99,6 +113,11 @@ class App extends Component {
     }
   }
 
+  /*
+    This function will update any changes to a document
+      - Update documents ID's in the store
+      - Update pagination
+  */
   async updateJson(newDoc, id, rev) {
     const trueResult = await updateJson(
       this.props.storeData.selectedBucket,
@@ -115,6 +134,7 @@ class App extends Component {
     this.getChannelFeed(); // incase a doc saved multiple times
   }
 
+  // Put the selected bucket into the store
   async bucketHandleChecked(event) {
     await this.props.selectedBucket(event.target.value);
     if (
@@ -126,12 +146,14 @@ class App extends Component {
   }
 
   // eslint-disable-next-line
+  // Upate current page 'Pagination'
   async handlePageClick(data) {
     const currentPage = data.selected + 1;
     await this.props.updateCurrentPage(currentPage);
     this.getChannelFeed();
   }
 
+  // Insert whatever you type in the search field into the store
   async searchHandleChange(event) {
     console.log('search clicked!');
     const searchValue = event.target.value;
@@ -190,6 +212,11 @@ class App extends Component {
               />
             ) : null}
           </div>
+
+          {/*   
+            Map though the data
+            Each document will have it's unique Key/Index
+          */}
           <div>
             {storeData.dataReducer && storeData.dataReducer.data
               ? storeData.dataReducer.data.map(object => {
