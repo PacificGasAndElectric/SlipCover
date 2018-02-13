@@ -6,6 +6,19 @@
 -  User Friendly.
 
 
+## Table of Contents
+- [Installation](#installation)
+- [MIT License](#license)
+- [Run the project](#run-the-project)
+- [Stop the project](#stop-the-project)
+- [Run test coverage](#run-test-coverage)
+- [Dependencies](#dependencies)
+- [Details](#details)
+- [View Mode](#view-Mode)
+- [Edit Mode](#edit-Mode)
+- [Contributing](#contributing)
+- [Personal Usage](#personal-usage)
+- [Copyright (c) 2018 Pacific Gas and Electric (PGE).](#Copyright (c) 2018 Pacific Gas and Electric (PGE).)
 
 ## Installation
 
@@ -14,13 +27,13 @@ yarn isntall
 ```
 
 
-## To run the project
+## Run the project
 
 ```
 yarn start
 ```
 
-## To stop the project
+## Stop the project
 ```
 ctr + c
 ```
@@ -30,7 +43,7 @@ and then
 yarn run docker-down
 ```
 
-## To run the test coverage
+## Run test coverage
 
 ```
 yarn run cover
