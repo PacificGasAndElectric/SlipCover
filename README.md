@@ -86,11 +86,11 @@ yarn run cover
 
 All contributions and suggestions are welcome!
 
-For suggested improvements, please [file an issue](https://github.com/PGEDigitalCatalyst/SlipCover/issues).
+For suggested improvements, please [file an issue](https://github.com/PacificGasAndElectric/SlipCover/issues).
 
 For direct contributions, please fork the repository and file a pull request. If you never created a pull request before, watch these quick tutorials [here](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-1. Fork it (<https://github.com/PGEDigitalCatalyst/SlipCover/fork>)
+1. Fork it (<https://github.com/PacificGasAndElectric/SlipCover/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
