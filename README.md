@@ -8,9 +8,9 @@
 
 ## Table of Contents
 - [Installation](#installation)
-- [MIT License](#license)
 - [Run the project](#run-the-project)
 - [Stop the project](#stop-the-project)
+- [Stop all running containers](#stop-all-running-containers)
 - [Run test coverage](#run-test-coverage)
 - [Dependencies](#dependencies)
 - [Details](#details)
@@ -43,11 +43,20 @@ and then
 yarn run docker-down
 ```
 
+
+## Stop all running containers
+```
+./docker-kill-all
+```
+This script will stop all docker running containers incase if Couchbase/Sync-Gateway ports being used somewhere else on your machine. You can run this script if the App won't start! 
+
+
 ## Run test coverage
 
 ```
 yarn run cover
 ```
+
 
 ## Dependencies
 - Langage: [React-Redux](https://redux.js.org/docs/basics/UsageWithReact.html).
