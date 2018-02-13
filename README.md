@@ -18,7 +18,7 @@
 - [Edit Mode](#edit-mode)
 - [Contributing](#contributing)
 - [Personal Usage](#personal-usage)
-- [Copyright (c) 2018 Pacific Gas and Electric (PGE).](#Copyright-(c)-2018-Pacific-Gas-and-Electric-(PGE).)
+- [MIT License](#mit-license)
 
 ## Installation
 
