@@ -14,11 +14,11 @@
 - [Run test coverage](#run-test-coverage)
 - [Dependencies](#dependencies)
 - [Details](#details)
-- [View Mode](#view-Mode)
-- [Edit Mode](#edit-Mode)
+- [View Mode](#view-mode)
+- [Edit Mode](#edit-mode)
 - [Contributing](#contributing)
 - [Personal Usage](#personal-usage)
-- [Copyright (c) 2018 Pacific Gas and Electric (PGE).](#Copyright (c) 2018 Pacific Gas and Electric (PGE).)
+- [Copyright (c) 2018 Pacific Gas and Electric (PGE).](#Copyright-(c)-2018-Pacific-Gas-and-Electric-(PGE).)
 
 ## Installation
 
