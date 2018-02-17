@@ -18,7 +18,7 @@
 - [Edit Mode](#edit-mode)
 - [Contributing](#contributing)
 - [Personal Usage](#personal-usage)
-- [MIT License](#mit-license)
+- [License](#license)
 
 ## Installation
 
