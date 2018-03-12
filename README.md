@@ -1,8 +1,9 @@
 # Sync-Gateway-SlipCover open source
 
--  Quick and easy access to interact with [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
+-  Quick and easy access to interact with 
+[Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) documents.
 -  More features implimented.
-`view,Edit,Remove,Save,Downlaod,Search`  
+`View, Edit, Remove, Save, Downlaod, Search`  
 -  User Friendly.
 
 
@@ -23,7 +24,7 @@
 ## Installation
 
 ```
-yarn isntall
+yarn install
 ```
 
 
@@ -48,7 +49,8 @@ yarn run docker-down
 ```
 ./docker-kill-all
 ```
-This script will stop all docker running containers incase if Couchbase/Sync-Gateway ports being used somewhere else on your machine. You can run this script if the App won't start! 
+This script will stop all docker running containers incase if Couchbase/Sync-Gateway ports being used somewhere else on 
+your machine. You can run this script if the App won't start! 
 
 
 ## Run test coverage
@@ -64,9 +66,13 @@ yarn run cover
 
 ## Details
 
-- [Docker Compose](https://docs.docker.com/compose/) manages running [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
+- [Docker Compose](https://docs.docker.com/compose/) manages running 
+[Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) 
+and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
 
-- The data will be populated once the docker finish uploading the bucket "beer-sample." The first time it runs, it takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all documents are uploaded.
+- The data will be populated once the docker container finishes uploading the bucket "beer-sample." The first time it runs, 
+it takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all 
+documents are uploaded.
 
 
 ## View Mode
@@ -88,7 +94,8 @@ All contributions and suggestions are welcome!
 
 For suggested improvements, please [file an issue](https://github.com/PacificGasAndElectric/SlipCover/issues).
 
-For direct contributions, please fork the repository and file a pull request. If you never created a pull request before, watch these quick tutorials [here](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+For direct contributions, please fork the repository and file a pull request. If you have never created a pull request, 
+watch these quick tutorials [here](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
 1. Fork it (<https://github.com/PacificGasAndElectric/SlipCover/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
@@ -121,9 +128,11 @@ REACT_APP_SYNC_GATEWAY="http://localhost:4984"
 ```
 
 
-- Bear in mind that the default behavior of fetch is to ignore the Set-Cookie header completely. To opt into accepting cookies from the server, you must use the credentials option.
+- Bear in mind that the default behavior of fetch is to ignore the Set-Cookie header completely. To opt into accepting 
+cookies from the server, you must use the credentials option.
 
-For [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) requests, use the "include" value to allow sending credentials to
+For [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) requests, use the "include" value to allow sending 
+credentials to
 other domains:
 
 ```javascript
