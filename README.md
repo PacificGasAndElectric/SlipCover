@@ -49,7 +49,7 @@ yarn run docker-down
 ```
 ./docker-kill-all
 ```
-This script will stop all docker running containers incase if Couchbase/Sync-Gateway ports being used somewhere else on 
+This script will stop all running docker containers in case Couchbase/Sync-Gateway ports are being used somewhere else on 
 your machine. You can run this script if the App won't start! 
 
 
@@ -70,21 +70,21 @@ yarn run cover
 [Sync-Gateway](https://developer.couchbase.com/documentation/mobile/current/installation/sync-gateway/index.html) 
 and [Couchbase Server](https://www.couchbase.com/sign-in) locally.
 
-- The data will be populated once the docker container finishes uploading the bucket "beer-sample." The first time it runs, 
-it takes up to ~50 seconds to run docker script and upload ~7000 documents. The progress bar set for ~55 sec to insure all 
+- The data will be populated once the docker container finishes uploading the "beer-sample" bucket. The first time it runs, 
+it takes ~50 seconds to run the docker script and upload ~7000 documents. The progress bar is set for ~55 sec to ensure all 
 documents are uploaded.
 
 
 ## View Mode
--  It shows a list of documents ID's.
--  Ability to `view, edit, remove, download` a document from Sync-Gateway.
--  Ability to search for a specific document.
+-  Shows a list of documents ID's
+-  Ability to `view, edit, remove, download` a document from Sync-Gateway
+-  Ability to search for a specific document
 
 <img src=./screenshots/readMode.png width=70% /> 
 
 
 ## Edit Mode
-- Ability to save the changes into Sync-Gateway.
+- Ability to save the changes into Sync-Gateway
 
 <img src= ./screenshots/editMode.png width=70% />
 
